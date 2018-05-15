@@ -11,34 +11,40 @@
  */
 
 get_header(); ?>
+<?php $t_names = 'Jannine K. Bailey, Jeremy L. Pinyon, Sashindran Anantham, Ruth M. Hall'; ?>
 
 	<main role="main">
 
       <div class="start is-results">
         <a class="start-back" href="#"></a>
+		  Search results
+		  <div class="visible-xs">
         <form class="menu-search" role="search"  method="get" action="<?php echo home_url( '/' ); ?>">
           <input class="form-control" type="search" placeholder="Search the collection" value="<?php echo get_search_query() ?>" name="s">
         </form>
+			  </div>
       </div>
 
 	<div class="search-results">
+		<div class="container">
 	<?php if (have_posts()) : ?>
 		<?php  while (have_posts()) : the_post(); ?>
 		
-		<div class="card">
-          <div class="card-body">
-            <div class="card-date">NOVEMBER 2010</div>
-            <a class="card-title" href="<?php the_permalink(); ?>"><?php the_title() ?></a>
-            <div class="card-persons"><?php the_field( "article-authors" ); ?></div>
-            <div class="card-excerpt">1.<?php the_excerpt(); ?></div>
-            <div class="card-counts">
-              <img src="/assets/img/counts.png">
-            </div>
-          </div>
-        </div>
+			<div class="cardArticle">
+				<div class="cardArticle-body">
+					<div class="cardArticle-date"><?php the_date(); ?></div>
+					<a class="cardArticle-title" href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
+					<div class="cardArticle-persons"><?php if (get_field('article-authors')) { the_field('article-authors'); } else { echo $t_names; } ?></div>
+					<div><?php the_excerpt(); ?></div>
+				</div>
+			</div>
 	
 		<?php endwhile; ?>
 	<?php endif; ?>
-	</div>
+			</div><!-- container --> 
+	</div><!-- search results -->
+		
 
+		</main>
+		
 <?php get_footer();

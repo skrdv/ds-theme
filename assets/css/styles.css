@@ -94,15 +94,6 @@ body {
   font-family: 'Roboto', sans-serif;
 }
 
-a {
-  color: rgba(255,255,255,1);
-  /* text-decoration: underline; */
-}
-
-
-
-
-
 
 
 .navbar {
@@ -210,17 +201,22 @@ main {
 
 .start {
   position: relative;
-  padding: 20px 16px 77px 16px;
+  padding: 0;
   margin: 0px;
   margin-bottom: 10px;
   border-radius: 0;
   color: rgba(255,255,255,1);
   background-color: rgba(0,106,131,1);
-  background-image: url(../img/header-bg.svg);
+  background-image: url(../img/xmr-bg.jpg);
   background-repeat: no-repeat;
-  background-position: center 120%;
-  background-size: 100% 200px;
-  
+  background-position: center top;
+  background-size: cover;
+}
+
+.start-inner {
+  position: relative;
+  min-height: 530px; 
+  padding: 0.1px 0 77px 0;
 }
 
 .start.is-results {
@@ -229,9 +225,9 @@ main {
 }
 
 .start-title {
-  margin: 12px 0 15px 0;
+  margin: 170px 0 25px 0;
   font-family: 'Roboto', sans-serif;
-  font-size: 3.2rem;
+  font-size: 4.8rem;
   line-height: 4rem;
   font-weight: normal;
   text-align: center;
@@ -239,22 +235,54 @@ main {
 }
 
 .start-text {
+  font-size: 2.4rem;
+  line-height: 3.2rem;
+  text-align: center;
+  color: #FFFFFF;
+  text-shadow: 0 0pt 4pt rgba(0,0,0,0.5);
+}
+
+
+
+@media (max-width: 767px) {
+.start-title {
+  margin: 24px 0 18px 0;
+  font-family: 'Roboto', sans-serif;
+  font-size: 3.2rem;
+  line-height: 4rem;
+  font-weight: normal;
+  text-align: center;
+  text-shadow: 0 0pt 4pt rgba(0,0,0,0.5);
+}
+  
+.start-text {
   font-size: 24px;
   line-height: 32px;
   text-align: center;
+}  
 }
 
+
+
+
+.tab-content {
+	background-color: #F2F2F2;
+}
+
+
 .startTabs  {
-  position: absolute;
-  left: 0px;
-  right: 0;
-  bottom: 0px;
-  border: none;
-  display: flex;
+  	position: absolute;
+  	left: 50%;
+	width: 646px;
+  	margin-left: -323px;
+  	bottom: 0px;
+  	border: none;
+  	display: flex;
+  	justify-content: space-between;
 }
 
 .startTabs-item {
-  width: 33.33333%;
+  width: 32%;
   border: 0px solid #fff;
   text-align: center;
   font-size: 1.6rem;
@@ -262,16 +290,67 @@ main {
 }
 
 .startTabs-item a{
-  height: 48px;
-  padding: 0 0 0 0;
+  height: 50px;
+	background-color: rgba(255,255,255,0.25);
+  padding: 20px 0 0 0;
   display: block;
   color: #fff;
   text-decoration: none;
+	position: relative;
+  top: 5px;
 }
 
 .startTabs-item a.active{
-  font-weight: bold;
-  border-bottom: 4px solid #fff;
+  font-size: 1.8rem;
+  height: 55px;
+	background-color: #F2F2F2;
+  padding: 23px 0 0 0;
+	color: #000000;
+  top: 0;
+}
+
+
+
+@media (max-width: 767px) {
+.startTabs  {
+  	left: -15px;
+  	right: -15px;
+  	bottom: 0px;
+  	width: auto;
+	margin-left: 0;
+}	
+
+.start-inner {
+	min-height: 230px; 
+}
+	
+.startTabs-item {
+  	width: 33.33333%;
+  	border: 0px solid #fff;
+  	text-align: center;
+  	font-size: 1.6rem;
+  	line-height: 1;
+}
+
+.startTabs-item a{
+  	height: 48px;
+  	padding: 0 0 0 0;
+  	display: block;
+  	color: #fff;
+	background: none;	
+  	text-decoration: none;
+		top: 0;
+}
+
+.startTabs-item a.active{
+	font-size: 1.6rem;
+  	color: #fff;	
+  	height: 48px;
+  	padding: 0 0 0 0;	
+	background: none;	
+  	font-weight: bold;
+  	border-bottom: 4px solid #fff;
+	margin-bottom: 0;
 }
 
 .startTabs-item a:hover{
@@ -312,6 +391,11 @@ main {
 .start .nav-link:focus {
   color: #73a534;
 }
+}  
+  
+
+
+
 
 .start-search {
   margin-top: 100px;
@@ -363,20 +447,20 @@ main {
 
 
 .articles {
-  background: rgba(238,238,238,1);
+	margin-top: -10px;	
+	padding-bottom: 60px;
+	overflow: hidden;	
 }
 
 .cardArticle {
-  margin-bottom: 10px;
+  margin-bottom: 30px;
   border-radius: 0px;
   border: none;
   background-color: #FFFFFF;
-	border: 0px solid #fff;
+  border: 0px solid #fff;
+  box-shadow: 0px 3px 2px 0 rgba(0,0,0,0.2);	
 }
 
-.cardArticle:first-child {
-  margin-top: 10px;
-}
 
 .cardArticle-body {
   padding: 10px;
@@ -398,6 +482,11 @@ main {
   font-weight: bold;
   line-height: 20px;
 }
+
+.search-results {
+	padding: 0 0 60px 0;
+}
+
 
 .search-results .card-title {
   font-weight: normal;
@@ -875,12 +964,36 @@ padding: 20px 10px;
 
 /* Additions =================== */
 
-.site-wrapper {
-	max-width: 320px;
-  margin: 0px auto;
-}
-
-
 .searchwp-highlight {
 background-color: yellow;
 }
+
+.pane-title {
+  padding: 30px 0 30px 0;
+  margin: 0 0 40px 0;
+	color: #000000;
+	font-family: Roboto;
+  font-weight: 400;
+	font-size: 2.8rem;
+	line-height: 3.2rem;
+  border-bottom: 1px solid rgba(155,155,155,0.5);
+}
+
+.hidden-xs {
+	display: block;
+}
+
+.visible-xs {
+	display: none;
+}
+
+@media (max-width: 767px) {
+.visible-xs {
+	display: block;
+}
+	
+.hidden-xs {
+	display: none;
+}
+	
+}	

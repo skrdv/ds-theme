@@ -42,41 +42,14 @@
 <?php while (have_posts()): the_post(); ?>
 
   <main role="main">
-    <div class="debug">
-      <?php
-      WP_Filesystem();
-    	// $updir	 	= wp_upload_dir();
-    	$debug 		= get_field('debug');
-    	$upload 	= wp_upload_dir()['path'];
-    	$zipname	= get_field('article-zip')['filename'];
-    	$filename = str_replace('.', '', substr($zipname, 0, -4));
-    	$filearray = array();
-    	$xml = simplexml_load_file($upload.'/'.$filename.'.xml');
-    	foreach ($xml->body->sec as $key1 => $value) {
-    		$filearray[$key1] = $value['id'];
-        echo 'S1: '.$value['id'].'  '.$value;
-    		foreach ($value as $key2 => $value) {
-    			$filearray[$key1][$key2] = $value;
-          echo 'S2: '.$value['id'].'  '.$value;
-    			foreach ($value as $key3 => $value) {
-    				$filearray[$key1][$key2][$key3] = $value;
-    			}
-    		}
-    	}
-    	$filecontent = json_encode($filearray);
-    	// $filecontent2 = json_decode($filearray);
-    	// var_dump($filecontent);
-    	var_dump($filecontent);
-      ?>
-    </div>
+
     <div class="intro">
       <div class="container">
-
-        <div class="intro-meta">November 2010, Journal of Medical Microbiology 59: 1331-1339, doi: 10.1099/jmm.0.022475-0</div>
+        <div class="intro-meta">November 2010, Journal of Medical Microbiology</div>
         <h1 class="intro-title"><?php the_title(); ?></h1>
         <div class="intro-persons"><?php the_field('article-authors'); ?></div>
         <div class="intro-pdf">
-          <button class="btn btn-primary" type="button" name="button">PDF 753kB</button>
+          <a class="btn btn-primary" href="<?php echo wp_upload_dir()['baseurl'].'/'.get_field('article-pdf'); ?>" target="_blank">PDF 753kB</a>
           <a class="intro-tweet" href="#">Tweet</a>
         </div>
       </div>
@@ -85,6 +58,7 @@
     <div class="lens">
       <iframe src="//ds.skrdv.com/lens/?article=<?php echo get_the_ID(); ?>" width="900" height="1400"></iframe>
     </div>
+
   </main>
 
 <?php endwhile; ?>
