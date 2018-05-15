@@ -86,6 +86,9 @@
     font-style: italic;
 }
 
+
+
+/* Base =================== */
 html {
 	font-size: 62.5%;
 }
@@ -96,6 +99,41 @@ body {
 
 
 
+
+.btn {
+  height: 36px;
+  padding: .375rem 2rem;
+  border: none;
+  border-radius: 2px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 28px;
+  text-transform: uppercase;
+}
+
+.btn-primary {
+  color: #FFFFFF;
+  background-color: #006A83;
+  box-shadow: 0 2px 2px 0 rgba(0,0,0,0.24);
+}
+
+.btn-transparent {
+  color: #006A83;
+  background-color: transparent;
+  box-shadow: none;
+}
+
+
+
+
+
+
+
+
+
+
+
+/* Nav =================== */
 .navbar {
   height: 70px;
 }
@@ -121,7 +159,7 @@ body {
 
 
 
-
+/* Menu =================== */
 #navbarHeader {
   position: absolute;
   right: 0;
@@ -164,8 +202,6 @@ body {
   background-color: #CBD0D4;
 }
 
-
-
 .menu-collection,
 .menu-about {
   list-style: none;
@@ -199,6 +235,10 @@ main {
 }
 
 
+
+
+
+/* Start =================== */
 .start {
   position: relative;
   padding: 0;
@@ -215,7 +255,7 @@ main {
 
 .start-inner {
   position: relative;
-  min-height: 530px; 
+  min-height: 530px;
   padding: 0.1px 0 77px 0;
 }
 
@@ -242,33 +282,35 @@ main {
   text-shadow: 0 0pt 4pt rgba(0,0,0,0.5);
 }
 
-
-
 @media (max-width: 767px) {
-.start-title {
-  margin: 24px 0 18px 0;
-  font-family: 'Roboto', sans-serif;
-  font-size: 3.2rem;
-  line-height: 4rem;
-  font-weight: normal;
-  text-align: center;
-  text-shadow: 0 0pt 4pt rgba(0,0,0,0.5);
+  .start-title {
+    margin: 24px 0 18px 0;
+    font-family: 'Roboto', sans-serif;
+    font-size: 3.2rem;
+    line-height: 4rem;
+    font-weight: normal;
+    text-align: center;
+    text-shadow: 0 0pt 4pt rgba(0,0,0,0.5);
+  }
+
+  .start-text {
+    font-size: 24px;
+    line-height: 32px;
+    text-align: center;
+  }
 }
-  
-.start-text {
-  font-size: 24px;
-  line-height: 32px;
-  text-align: center;
-}  
-}
 
 
 
 
+
+
+
+
+/* Start Tabs =================== */
 .tab-content {
 	background-color: #F2F2F2;
 }
-
 
 .startTabs  {
   	position: absolute;
@@ -318,12 +360,12 @@ main {
   	bottom: 0px;
   	width: auto;
 	margin-left: 0;
-}	
+}
 
 .start-inner {
-	min-height: 230px; 
+	min-height: 230px;
 }
-	
+
 .startTabs-item {
   	width: 33.33333%;
   	border: 0px solid #fff;
@@ -337,17 +379,17 @@ main {
   	padding: 0 0 0 0;
   	display: block;
   	color: #fff;
-	background: none;	
+	background: none;
   	text-decoration: none;
 		top: 0;
 }
 
 .startTabs-item a.active{
 	font-size: 1.6rem;
-  	color: #fff;	
+  	color: #fff;
   	height: 48px;
-  	padding: 0 0 0 0;	
-	background: none;	
+  	padding: 0 0 0 0;
+	background: none;
   	font-weight: bold;
   	border-bottom: 4px solid #fff;
 	margin-bottom: 0;
@@ -360,7 +402,7 @@ main {
 
 
 
-
+/* Start Nav =================== */
 .start .nav-item:last-child .nav-link {
   height: 42px;
 }
@@ -391,12 +433,12 @@ main {
 .start .nav-link:focus {
   color: #73a534;
 }
-}  
-  
+}
 
 
 
 
+/* Start Search =================== */
 .start-search {
   margin-top: 100px;
   margin-bottom: 60px;
@@ -445,11 +487,11 @@ main {
 
 
 
-
+/* Card Article =================== */
 .articles {
-	margin-top: -10px;	
+	margin-top: -10px;
 	padding-bottom: 60px;
-	overflow: hidden;	
+	overflow: hidden;
 }
 
 .cardArticle {
@@ -458,9 +500,8 @@ main {
   border: none;
   background-color: #FFFFFF;
   border: 0px solid #fff;
-  box-shadow: 0px 3px 2px 0 rgba(0,0,0,0.2);	
+  box-shadow: 0px 3px 2px 0 rgba(0,0,0,0.2);
 }
-
 
 .cardArticle-body {
   padding: 10px;
@@ -481,15 +522,7 @@ main {
   font-size: 16px;
   font-weight: bold;
   line-height: 20px;
-}
-
-.search-results {
-	padding: 0 0 60px 0;
-}
-
-
-.search-results .card-title {
-  font-weight: normal;
+  cursor: pointer;
 }
 
 .cardArticle-persons {
@@ -498,7 +531,7 @@ main {
   color: rgba(97,97,97,1);
   font-size: 14px;
   line-height: 20px;
-  background-image: url(../img/persons.png); 
+  background-image: url(../img/persons.png);
   background-repeat: no-repeat;
   background-position: -1px 2px;
 }
@@ -519,9 +552,60 @@ main {
 }
 
 
+/* Card Article Modal =================== */
+.modal .cardArticle-date {
+  font-size: 12px;
+  color: #757575;
+}
+
+.modal .cardArticle-title {
+  margin-bottom: 10px;
+  font-weight: normal;
+  font-size: 24px;
+  line-height: 30px;
+  color: rgba(0,0,0,0.87);
+}
+
+.modal .cardArticle-persons {
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.modal .cardAbstract {
+  margin-bottom: 30px;
+  font-size: 16px;
+  line-height: 24px;
+  color: rgba(0,0,0,0.87);
+}
+
+.modal .cardArticle-buttons {
+  float: right;
+}
+
+.modal .cardArticle-buttons .btn {
+  width: 145px;
+}
 
 
 
+
+/* Search =================== */
+.search-results {
+	padding: 0 0 60px 0;
+}
+
+.search-results .card-title {
+  font-weight: normal;
+}
+
+
+
+
+
+
+
+
+/* About =================== */
 .about {
 
 }
@@ -542,7 +626,7 @@ main {
 
 
 
-
+/* Journals =================== */
 .journals {
   padding: 10px 0;
 }
@@ -612,7 +696,7 @@ main {
 
 
 
-
+/* Intro =================== */
 .intro {
   position: relative;
   padding: 10px;
@@ -649,16 +733,7 @@ main {
 }
 
 .intro-pdf .btn {
-  height: 36px;
 	width: 180px;
-  border: none;
-	border-radius: 2px;
-	background-color: #006A83;
-	box-shadow: 0 0 2px 0 rgba(0,0,0,0.12), 0 2px 2px 0 rgba(0,0,0,0.24), 0 0 8px 0 rgba(0,0,0,0.12), 0 8px 8px 0 rgba(0,0,0,0.24);
-  font-size: 14px;
-  font-weight: 500;
-  line-height: 16px;
-  text-align: center;
 }
 
 .intro .nav-tabs {
@@ -711,9 +786,9 @@ main {
 
 
 
-.abstract {
 
-}
+/* Abstract =================== */
+.abstract {}
 
 .abstract-body {
   padding: 20px 10px;
@@ -732,7 +807,7 @@ main {
 
 
 
-
+/* Browse =================== */
 .browse {
   display: flex;
   flex-direction: row;
@@ -811,18 +886,7 @@ main {
   width: 50%;
 }
 
-
-
-
-
-
-
-
-
-
-.fulltext {
-
-}
+.fulltext {}
 
 .fulltext-body {
   padding: 20px 10px;
@@ -833,7 +897,7 @@ main {
 
 
 
-
+/* Tools =================== */
 .tools {
 padding: 20px 10px;
 }
@@ -880,7 +944,7 @@ padding: 20px 10px;
 
 
 
-
+/* Footer =================== */
 .footer {
   position: relative;
 	height: 390px;
@@ -897,7 +961,7 @@ padding: 20px 10px;
   font-size: 20px;
   font-weight: 500;
   line-height: 28px;
-  
+
 }
 
 .footer-menu {
@@ -934,7 +998,7 @@ padding: 20px 10px;
 
 
 
-
+/* Modal =================== */
 .btn-modal  {
   color: #006A83;
   font-size: 14px;
@@ -949,6 +1013,10 @@ padding: 20px 10px;
   padding: 10px;
 }
 
+.modal-backdrop.show {
+  opacity: 0.7;
+}
+
 .modal .card {
   box-shadow: none;
   text-align: left;
@@ -961,9 +1029,73 @@ padding: 20px 10px;
   line-height: 24px;
 }
 
+@media (min-width: 576px) {
+  .modal-dialog {
+    max-width: 800px;
+  }
+}
+
+
+
+
+/* Modal Slider =================== */
+.slick-list {
+  margin: 30px;
+}
+
+.slick-prev,
+.slick-next {
+  width: 160px;
+  height: 160px;
+  border: 1px solid #979797;
+  background-color: rgba(255,255,255,0.5);
+}
+
+.slick-prev:before,
+.slick-next:before {
+  color: #4A4A4A;
+  font-weight: bold;
+}
+
+.slick-prev.slick-disabled,
+.slick-next.slick-disabled {
+  display: none !important;
+}
+
+.slick-prev {
+  left: -210px;
+}
+
+.slick-next {
+  right: -210px;
+}
+
+.slick-prev:hover,
+.slick-prev:focus,
+.slick-next:hover,
+.slick-next:focus {
+  background-color: rgba(255,255,255,0.8);
+  color: #4A4A4A;
+}
+
+.slick-dots {
+  position: absolute;
+  top: 0;
+  top: -36px;
+  bottom: auto;
+  height: 36px;
+  line-height: 30px;
+  padding-left: 15px;
+  background-color: #EEEEEE;
+  text-align: left;
+}
+
+.slick-dots li {
+  margin: 0;
+}
+
 
 /* Additions =================== */
-
 .searchwp-highlight {
 background-color: yellow;
 }
@@ -991,9 +1123,9 @@ background-color: yellow;
 .visible-xs {
 	display: block;
 }
-	
+
 .hidden-xs {
 	display: none;
 }
-	
-}	
+
+}
