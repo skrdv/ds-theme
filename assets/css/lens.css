@@ -1383,8 +1383,9 @@ body.loading .spinner-wrapper {
 
 
 
-
+/*
 /* CUSTOM */
+/*
 .menu-bar {
   left: auto;
   width: 270px;
@@ -1462,3 +1463,4 @@ body.loading .spinner-wrapper {
   font-weight: normal;
   text-decoration: none;
 }
+*/

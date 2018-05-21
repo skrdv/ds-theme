@@ -1,3 +1,10 @@
+<?php 
+if (isset($wp_query->query_vars['template'])) {
+	$template = $wp_query->query_vars['template'];
+}
+?>
+
+<?php if ($template != 'lens'): ?>
 <!doctype html>
 <html lang="en">
 <head>
@@ -32,7 +39,7 @@
       </button>
     </div>
     <div class="bread">
-      <div class="item">Home</div>
+      <div class="item"><?php echo $template ?></div>
       <div class="item">Journal of Medical Microbiology</div>
       <div class="item">Volume 59, Issue 11</div>
       <div class="item active">Article</div>
@@ -56,7 +63,7 @@
     <div class="article-content hidden"></div>
 
     <div class="lens">
-      <iframe src="//ds.skrdv.com/lens/?article=<?php echo get_the_ID(); ?>" width="900" height="1400"></iframe>
+      <iframe src="<?php the_permalink(); ?>/?article=<?php echo get_the_ID(); ?>&template=lens" width="900" height="1400"></iframe>
     </div>
 
   </main>
@@ -95,5 +102,7 @@
 		<?php } ?>
 	</div>
 </div>
-
+<?php else: ?>
+<?php get_template_part('lens2'); ?>	
+<?php endif; ?>
 <?php get_footer(); ?>

@@ -37,7 +37,8 @@ function ds_scripts() {
 	wp_enqueue_style( 'ds-bootstrap-css', get_template_directory_uri() . '/assets/css/bootstrap.min.css' );
 	wp_enqueue_style( 'ds-lens', get_template_directory_uri() . '/assets/css/lens.css' );
 	wp_enqueue_style( 'ds-style', get_template_directory_uri() . '/assets/css/styles.css' );
-	wp_enqueue_style( 'ds-desktop', get_template_directory_uri() . '/assets/css/desktop.css' );
+	wp_enqueue_style( 'ds-desktop', get_template_directory_uri() . '/assets/css/debug.css' );
+
   wp_enqueue_script('ds-bootstrap-js', get_template_directory_uri().'/assets/js/bootstrap.min.js', array('jquery') );
   wp_enqueue_script('ds-scripts', get_template_directory_uri().'/assets/js/scripts.js', array('jquery') );
 }
@@ -63,97 +64,139 @@ add_filter( 'searchwp_fuzzy_threshold', 'my_fuzzy_threshold' );
 // Update post
 function my_acf_save_post( $post_id ) {
 
-	// WP
-	WP_Filesystem();
-	$rootPATH		 = get_home_path();
-	$uploadPATH  = wp_upload_dir()['path'];
+	// Directories
+  WP_Filesystem();
+  $rootPath		 = get_home_path();
+  $uploadPath  = wp_upload_dir()['path'];
+  $articleSlug = get_post_field( 'post_name', get_post() );
+  $articlePath = $rootPath.'/digital-science/'.$articleSlug;
 
 	// ACF
-	$articleZIP  = get_field('article-zip');
-	$articleXML	 = get_field('article-xml');
-	$articlePDF	 = get_field('article-pdf');
-	$xmlCONTENT	 = get_field('article-text');
+	$articleZip      = get_field('article-zip');
+	$articleXml	     = get_field('article-xml');
+	$articlePdf	     = get_field('article-pdf');
+	$articleDate     = get_field('article-date');
+	$articleAuthors  = get_field('article-authors');
+	$articleArstract = get_field('article-abstract');
+  $articleBody     = get_field('article-body');
 
 	// Check ZIP
-	if (!$articleZIP) {
-		// error message
+	if (!$articleZip) {
+		/// error message
 	} else {
-		$articleFILE = $articleZIP['filename'];
-		$articleNAME = str_replace('.', '', substr($articleFILE, 0, -4));
-		$articleSLUG = get_post_field( 'post_name', get_post() );
-		$articleUNZIP = unzip_file( $uploadPATH.'/'.$articleFILE, $uploadPATH);
-		// $articleUNZIP = unzip_file( $uploadPATH.'/'.$articleFILE, $rootPATH.'/digital-science/'.$articleSLUG);
-		chmod_recursive($uploadPATH, false);
-		update_attached_file( $articleZIP, $articleUNZIP );
+    /// check if archive exists
+		$articleFile = $articleZip['filename'];
+		$articleName = str_replace('.', '', substr($articleFile, 0, -4));
+		// $articleUnzip = unzip_file( $uploadPath.'/'.$articleFile, $uploadPath);
+		$articleUnzip = unzip_file( $uploadPath.'/'.$articleFile, $articlePath);
+		chmod_recursive($articlePath, false);
+		update_attached_file($articleZip, $articleUnzip);
 	}
 
 	// Check PDF
-	if (!$articlePDF && $articleNAME) {
-		$articlePDF = $articleNAME.'.pdf';
-	} elseif ($articlePDF && !$articleNAME) {
-		$articlePDF = '';
+	if (!$articlePdf && $articleName) {
+		$articlePdf = $articleName.'.pdf';
+	} elseif ($articlePdf && !$articleName) {
+		$articlePdf = '';
 	} else {
-		// check file existing
+		/// check file existing
 	}
 
 	// Check XML
-	if (!$articleXML && $articleNAME) {
-		$articleXML = $articleNAME.'.xml';
-	} elseif ($articleXML && !$articleNAME) {
-		$articleXML = '';
+	if (!$articleXml && $articleName) {
+		$articleXml = $articleName.'.xml';
+	} elseif ($articleXml && !$articleName) {
+		$articleXml = '';
 	} else {
-		// check file existing
+		/// check file existing
 	}
 
 	// Get XML
-	$xmlFILE = simplexml_load_file($uploadPATH.'/'.$articleXML);
-	// $xmlSTRING = simplexml_load_string($uploadPATH.'/'.$articleXML);
-	// $xmlJSON = json_encode($xmlSTRING);
-	// $xmlARRAY = json_decode($xmlJSON, TRUE);
+	$xmlFile = simplexml_load_file($articlePath.'/'.$articleXml);
 
-	// Set TITLE
-	// $journalMeta  = 'journal-meta';
-	// $journalGroup = 'journal-title-group';
-	// $journalTitle = 'journal-title';
-	$articleMeta  = 'article-meta';
-	$articleGroup = 'title-group';
-	$articleTitle = 'article-title';
-	// $journalTITLE = $xmlFILE->front->{$journalMeta}->{$journalGroup}->{$journalTitle};
-	$articleTITLE = $xmlFILE->front->{$articleMeta}->{$articleGroup}->{$articleTitle};
-	$postUPDATE = array( 'ID' => $post_id, 'post_title' => $articleTITLE );
-	wp_update_post( $postUPDATE );
+  // Get Journal Meta
+  $journalTitle = $xmlFile->front->{'journal-meta'}->{'journal-title-group'}->{'journal-title'};
+  $journalIssn = $xmlFile->front->{'journal-meta'}->{'issn'}[0];
+  $journalPublisher = $xmlFile->front->{'journal-meta'}->{'publisher'}->{'publisher-name'};
 
-	// Parse ARRAY
-	// $xmlARRAY	= array();
-	// foreach ($xmlFILE->body->sec as $key1 => $value) {
-	// 	$xmlARRAY[$key1] = $value;
-	// 	foreach ($value as $key2 => $value) {
-	// 		$xmlARRAY[$key2] = $value;
-	// 		foreach ($value as $key3 => $value) {
-	// 			$xmlARRAY[$key3] = $value;
-	// 		}
-	// 	}
-	// }
+  // Get Article Title
+  $articleTitle = $xmlFile->front->{'article-meta'}->{'title-group'}->{'article-title'};
+  $articleTitleItalic = $xmlFile->front->{'article-meta'}->{'title-group'}->{'article-title'}->{'italic'};
+  $articleTitleFull = $articleTitle.' '.$articleTitleItalic;
 
-	// Set CONTENT
-	if (!$xmlCONTENT && $articleNAME) {
-		// $xmlCONTENT = json_decode($xmlARRAY);
-	} elseif ($xmlCONTENT && !$articleNAME) {
-		$xmlCONTENT = '';
-	} else {
-		// check file existing
-	}
+  // Get Article Authors
+  $articleAuthorsArray = array();
+  $articleAuthors = $xmlFile->front->{'article-meta'}->{'contrib-group'}->{'contrib'};
+  foreach ($articleAuthors as $value) {
+    $articleAuthorName = $value->name->{'given-names'};
+    $articleAuthorSurname = $value->name->{'surname'};
+    $articleAuthorFullName = $articleAuthorName.' '.$articleAuthorSurname;
+    array_push($articleAuthorsArray, $articleAuthorFullName);
+  }
+  $articleAuthorsList = implode(', ', $articleAuthorsArray);
+  $articleAuthors = $articleAuthorsList;
+
+  // Get Article Dates
+  $articlePubDateD = $xmlFile->front->{'article-meta'}->{'pub-date'}->{'day'};
+  $articlePubDateM = $xmlFile->front->{'article-meta'}->{'pub-date'}->{'month'};
+  $articlePubDateY = $xmlFile->front->{'article-meta'}->{'pub-date'}->{'year'};
+  $articlePubDateFull = $articlePubDateD.'.'.$articlePubDateM.'.'.$articlePubDateY;
+  $articleReceivedDateM = $xmlFile->front->{'article-meta'}->{'history'}->{'date'}[0]->{'month'};
+  $articleReceivedDateD = $xmlFile->front->{'article-meta'}->{'history'}->{'date'}[0]->{'day'};
+  $articleReceivedDateY = $xmlFile->front->{'article-meta'}->{'history'}->{'date'}[0]->{'year'};
+  $articleReceivedDateFull = $articleReceivedDateD.'.'.$articleReceivedDateM.'.'.$articleReceivedDateY;
+  $articleAcceptedDateM = $xmlFile->front->{'article-meta'}->{'history'}->{'date'}[1]->{'month'};
+  $articleAcceptedDateD = $xmlFile->front->{'article-meta'}->{'history'}->{'date'}[1]->{'day'};
+  $articleAcceptedDateY = $xmlFile->front->{'article-meta'}->{'history'}->{'date'}[1]->{'year'};
+  $articleAcceptedDateFull = $articleAcceptedDateD.'.'.$articleAcceptedDateM.'.'.$articleAcceptedDateY;
+  $articleDate = $articlePubDateFull;
+
+  // Get Article Abstract
+  $articleAbstractString = '';
+  $articleAbstractArray = array();
+  $articleAbstract = $xmlFile->front->{'article-meta'}->{'abstract'}->{'p'};
+  foreach ($articleAbstract as $value) {
+    $articleAbstractString .= $value.' ';
+    foreach ($value->italic as $value) {
+      $articleAbstractString .= '<i>'.$value.'</i>';
+    }
+  }
+  $articleAbstract = $articleAbstractString;
+
+  // Get Article Body
+  $articleBodyString = '';
+  $articleBodyArray = array();
+  $articleBodySec = $xmlFile->body->sec;
+  foreach ($articleBodySec as $value) {
+    // print_r($value);
+    // echo '<strong>'.$value->title.'</strong><br>';
+    // echo $value->p.'<br>';
+    $articleBodySecTitle = '<u>'.$value->title.'</u><br>';
+    $articleBodySecP = $value->p.'<br>';
+    $articleBodyString .= $articleBodySecTitle.$articleBodySecP;
+    // foreach ($value->italic as $value) {
+    //   $articleBodyString .= '<i>'.$value.'</i>';
+    // }
+  }
+  $articleBody = $articleBodyString;
 
 
-	// Check TIF
-	// count images
+	// Get Images
+	// convert images
 
 
-	// Update ACF
+  // Update Post Title
+  $postUpdate = array( 'ID' => $post_id, 'post_title' => $articleTitle );
+	wp_update_post( $postUpdate );
+
+	// Update ACF fields
 	update_field('debug', '');
-	update_field('article-xml', $articleXML);
-	update_field('article-pdf', $articlePDF);
-	update_field('article-text', $xmlCONTENT);
+	update_field('article-xml', $articleXml);
+	update_field('article-pdf', $articlePdf);
+	update_field('article-date', $articleDate);
+  update_field('article-authors', $articleAuthors);
+	update_field('article-abstract', $articleAbstract);
+  update_field('article-body', $articleBody);
 
 }
 add_action('acf/save_post', 'my_acf_save_post', 20);
