@@ -50,16 +50,76 @@
 	<div class="debug">
 		<?php
 
-    // WP
+    // Get folders
   	WP_Filesystem();
   	$rootPath		 = get_home_path();
   	$uploadPath  = wp_upload_dir()['path'];
     $articleSlug = get_post_field( 'post_name', get_post() );
-    $articlePath = $rootPath.'/digital-science/'.$articleSlug;
+    $articlePath = $rootPath.'digital-science/'.$articleSlug;
 
-		// Get XML
-    $articleXML = 'mic000286.xml';
-		$xmlFile = simplexml_load_file($articlePath.'/'.$articleXML);
+		// Get files
+    $articleFile = 'mic.000286.zip';
+		$articleName = str_replace('.', '', substr($articleFile, 0, -4));
+    $articleXml = $articleName.'.xml';
+
+    // Unzip archive
+    // $articleUnzip = unzip_file( $uploadPath.'/'.$articleFile, $articlePath);
+		// chmod_recursive($articlePath, true);
+		// update_attached_file($articleZip, $articleUnzip);
+    // if ($articleUnzip) {
+    //   echo 'Unzip succesfully!<br>';
+    // } else {
+    //   echo 'Unzip error!<br>';
+    // }
+
+    // Check ImageMagick
+    // if (extension_loaded('imagick')) {
+    //   echo 'ImageMagick Loaded';
+    // } else {
+    //   echo 'Extension ImageMagick not found by extension_loaded';
+    // }
+    // phpinfo();
+
+    // Convert images
+    $imagesArrayFiles = array();
+    $imagesTif = glob($articlePath.'/*.tif');
+    foreach($imagesTif as $image) {
+      $imageName = str_replace($articlePath.'/', '', substr($image, 0, -4));
+      array_push($imagesArrayFiles, $imageName);
+      $im = new imagick($image);
+      $im->writeImage($articlePath.'/'.$imageName.'.png');
+    }
+    // print_r($imagesArrayFiles);
+
+    // Edit XML
+    $dom=new DOMDocument();
+    $dom->load($articlePath.'/'.$articleXml);
+    $root = $dom->documentElement;
+    $images = $root->getElementsByTagName('graphic');
+    $imagesArrayXml = array();
+    foreach ($images as $image) {
+      $imageSrc = $image->getAttributeNS('http://www.w3.org/1999/xlink', 'href');
+      $imageName = str_replace('.', '', substr($imageSrc, 0, -4));
+      array_push($imagesArrayXml, $imageName);
+      $imagePng = $imageName.'.png';
+      $imagePngPath = '/digital-science/'.$articleSlug.'/'.$imagePng;
+      echo $imagePngPath.' ';
+      $image->setAttributeNS('http://www.w3.org/1999/xlink', 'href', $imagePng);
+    }
+    $dom->saveXML();
+    $dom->save($articlePath.'/'.$articleName.'PNG.xml');
+    // print_r($imagesArrayXml);
+
+    // Check images
+    if ($imagesArrayXml == $imagesArrayFiles) {
+      echo 'All images exists in archive!';
+    } else {
+      echo 'Not enough images in archive!';
+    }
+
+
+    // PARSE XML
+    $xmlFile = simplexml_load_file($articlePath.'/'.$articleXml);
 
 		// Get Journal Meta
 		$journalTitle = $xmlFile->front->{'journal-meta'}->{'journal-title-group'}->{'journal-title'};
@@ -114,9 +174,6 @@
     $articleBodyArray = array();
     $articleBodySec = $xmlFile->body->sec;
     foreach ($articleBodySec as $value) {
-      // print_r($value);
-      // echo '<strong>'.$value->title.'</strong><br>';
-      // echo $value->p.'<br>';
       $articleBodySecTitle = '<u>'.$value->title.'</u><br>';
       $articleBodySecP = $value->p.'<br>';
       $articleBodyString .= $articleBodySecTitle.$articleBodySecP;
@@ -127,7 +184,7 @@
     $articleBodyFull = $articleBodyString;
 
     // Show VARS
-    echo '<br>';
+    echo '<br><br><strong>PARSE XML</strong><br>';
     echo '<strong>Slug:</strong> '.$articleSlug.'<br>';
     echo '<strong>Path:</strong> '.$articlePath.'<br>';
     echo '<br>';
@@ -144,7 +201,8 @@
     echo '<br>';
 
     // print_r($articleAbstract);
-    // print_r($journalTitle);
+
+
 
 
 

@@ -49,14 +49,14 @@
       <div class="intro-authors"><?php the_field('article-authors'); ?></div>
       <div class="intro-pdf">
         <a class="btn btn-primary" href="<?php echo wp_upload_dir()['baseurl'].'/'.get_field('article-pdf'); ?>" target="_blank">PDF 753kB</a>
-        <!-- <a class="intro-tweet" href="#">Tweet</a> -->
+        <?php // <a class="intro-tweet" href="#">Tweet</a> ?>
       </div>
     </div>
 
     <div class="article-content hidden"></div>
 
     <div class="lens">
-      <iframe src="//ds.skrdv.com/lens/?article=<?php echo get_the_ID(); ?>" width="900" height="1400"></iframe>
+      <iframe src="//ds.skrdv.com/lens/?article=<?php echo get_the_ID(); ?>&template=lens" width="900" height="1400"></iframe>
     </div>
 
   </main>

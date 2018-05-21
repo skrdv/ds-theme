@@ -64,14 +64,14 @@ add_filter( 'searchwp_fuzzy_threshold', 'my_fuzzy_threshold' );
 // Update post
 function my_acf_save_post( $post_id ) {
 
-	// Directories
+	// Get folders
   WP_Filesystem();
   $rootPath		 = get_home_path();
   $uploadPath  = wp_upload_dir()['path'];
   $articleSlug = get_post_field( 'post_name', get_post() );
-  $articlePath = $rootPath.'/digital-science/'.$articleSlug;
+  $articlePath = $rootPath.'digital-science/'.$articleSlug;
 
-	// ACF
+	// Get fields
 	$articleZip      = get_field('article-zip');
 	$articleXml	     = get_field('article-xml');
 	$articlePdf	     = get_field('article-pdf');
@@ -80,18 +80,49 @@ function my_acf_save_post( $post_id ) {
 	$articleArstract = get_field('article-abstract');
   $articleBody     = get_field('article-body');
 
-	// Check ZIP
+	// Get archive
 	if (!$articleZip) {
-		/// error message
+		/// check if archive exists
+    /// error message and return
+    $articleName = '';
 	} else {
-    /// check if archive exists
+    // Delete all files
+    $articleAllFiles = glob($articlePath.'/*');
+    foreach($articleAllFiles as $file){
+      if(is_file($file))
+        unlink($file);
+    }
+    // Unzip archive
 		$articleFile = $articleZip['filename'];
 		$articleName = str_replace('.', '', substr($articleFile, 0, -4));
-		// $articleUnzip = unzip_file( $uploadPath.'/'.$articleFile, $uploadPath);
 		$articleUnzip = unzip_file( $uploadPath.'/'.$articleFile, $articlePath);
-		chmod_recursive($articlePath, false);
-		update_attached_file($articleZip, $articleUnzip);
+    update_attached_file($articleZip, $articleUnzip);
+    chmod_recursive($articlePath, false);
+    // Check unzip archive
+    // if ($articleUnzip) {
+    //   echo 'Unzip succesfully!<br>';
+    // } else {
+    //   echo 'Unzip error!<br>';
+    // }
+
 	}
+
+  // Check ImageMagick
+  // if (extension_loaded('imagick')) {
+  //   echo 'ImageMagick Loaded';
+  // } else {
+  //   echo 'Extension ImageMagick not found by extension_loaded';
+  // }
+
+  // Convert images
+  $imagesArrayFiles = array();
+  $imagesTif = glob($articlePath.'/*.tif');
+  foreach($imagesTif as $image) {
+    $imageName = str_replace($articlePath.'/', '', substr($image, 0, -4));
+    array_push($imagesArrayFiles, $imageName);
+    $im = new imagick($image);
+    $im->writeImage($articlePath.'/'.$imageName.'.png');
+  }
 
 	// Check PDF
 	if (!$articlePdf && $articleName) {
@@ -105,13 +136,42 @@ function my_acf_save_post( $post_id ) {
 	// Check XML
 	if (!$articleXml && $articleName) {
 		$articleXml = $articleName.'.xml';
+
+    // Edit XML
+    $dom=new DOMDocument();
+    $dom->load($articlePath.'/'.$articleXml);
+    $root = $dom->documentElement;
+    $images = $root->getElementsByTagName('graphic');
+    $imagesArrayXml = array();
+    foreach ($images as $image) {
+      $imageSrc = $image->getAttributeNS('http://www.w3.org/1999/xlink', 'href');
+      $imageName = str_replace('.', '', substr($imageSrc, 0, -4));
+      array_push($imagesArrayXml, $imageName);
+      $imagePng = $imageName.'.png';
+      $imagePngPath = '/digital-science/'.$articleSlug.'/'.$imagePng;
+      $image->setAttributeNS('http://www.w3.org/1999/xlink', 'href', $imagePngPath);
+    }
+    $dom->saveXML();
+    $dom->save($articlePath.'/'.$articleName.'PNG.xml');
+    $articleXmlPng = $articleName.'PNG.xml';
+    $articleXml = $articleXmlPng;
+
 	} elseif ($articleXml && !$articleName) {
 		$articleXml = '';
 	} else {
 		/// check file existing
 	}
 
-	// Get XML
+
+
+  // Check images
+  if ($imagesArrayXml == $imagesArrayFiles) {
+    echo 'All images exists in archive!';
+  } else {
+    echo 'Not enough images in archive!';
+  }
+
+	// Parse XML
 	$xmlFile = simplexml_load_file($articlePath.'/'.$articleXml);
 
   // Get Journal Meta
@@ -168,9 +228,6 @@ function my_acf_save_post( $post_id ) {
   $articleBodyArray = array();
   $articleBodySec = $xmlFile->body->sec;
   foreach ($articleBodySec as $value) {
-    // print_r($value);
-    // echo '<strong>'.$value->title.'</strong><br>';
-    // echo $value->p.'<br>';
     $articleBodySecTitle = '<u>'.$value->title.'</u><br>';
     $articleBodySecP = $value->p.'<br>';
     $articleBodyString .= $articleBodySecTitle.$articleBodySecP;
@@ -180,17 +237,12 @@ function my_acf_save_post( $post_id ) {
   }
   $articleBody = $articleBodyString;
 
-
-	// Get Images
-	// convert images
-
-
-  // Update Post Title
+  // Update Title
   $postUpdate = array( 'ID' => $post_id, 'post_title' => $articleTitle );
 	wp_update_post( $postUpdate );
 
-	// Update ACF fields
-	update_field('debug', '');
+	// Update fields
+	update_field('debug', $articlePath.'/'.$articleXml);
 	update_field('article-xml', $articleXml);
 	update_field('article-pdf', $articlePdf);
 	update_field('article-date', $articleDate);

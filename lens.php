@@ -5,15 +5,33 @@
 ?>
 
 <?php
+// WP_Filesystem();
+// $uploadPATH 	= wp_upload_dir()['path'];
+//
+// if (isset($wp_query->query_vars['article'])) {
+// 	$articleXML = get_field('article-xml', $wp_query->query_vars['article']);
+// } else {
+// 	$articleXML = 'mic000286.xml';
+// }
+// $xmlPATH = '//ds.skrdv.com/wp-content/uploads/'.$articleXML;
+?>
+
+<?php
 WP_Filesystem();
-$uploadPATH 	= wp_upload_dir()['path'];
+$rootPath		 = get_home_path();
+$uploadPath  = wp_upload_dir()['path'];
 
 if (isset($wp_query->query_vars['article'])) {
-	$articleXML = get_field('article-xml', $wp_query->query_vars['article']);
+	$articleXml  = get_field('article-xml', $wp_query->query_vars['article']);
+	// $articleSlug = get_post_field('post_name', get_post());
+	$articleSlug = $wp_query->query_vars['article'];
+	$articlePath = $rootPath.'digital-science/'.$articleSlug;
+	$articleUrl  = '//ds.skrdv.com/digital-science/'.$articleSlug;
+	$xmlUrl  		 = $articleUrl.'/'.$articleXml;
 } else {
-	$articleXML = 'mic000286.xml';
+	$articleXml = 'mic000286.xml';
 }
-$xmlPATH = '//ds.skrdv.com/wp-content/uploads/'.$articleXML;
+
 ?>
 
 <!doctype html>
@@ -29,7 +47,7 @@ $xmlPATH = '//ds.skrdv.com/wp-content/uploads/'.$articleXML;
 	<link href="<?php echo get_template_directory_uri(); ?>/assets/css/bootstrap.min.css" rel="stylesheet">
 	<link href="<?php echo get_template_directory_uri(); ?>/assets/css/lens.css" rel="stylesheet">
 	<link href="<?php echo get_template_directory_uri(); ?>/assets/css/styles.css" rel="stylesheet">
-	<link href="<?php echo get_template_directory_uri(); ?>/assets/css/desktop.css" rel="stylesheet">
+	<link href="<?php echo get_template_directory_uri(); ?>/assets/css/debug.css" rel="stylesheet">
 
 	<script src="<?php echo get_template_directory_uri(); ?>/assets/js/jquery.min.js"></script>
   <script src="<?php echo get_template_directory_uri(); ?>/assets/js/bootstrap.min.js"></script>
@@ -68,7 +86,7 @@ $xmlPATH = '//ds.skrdv.com/wp-content/uploads/'.$articleXML;
 		return query_string;
 	} ();
 
-	var documentURL = '<?php echo $xmlPATH; ?>';
+	var documentURL = '<?php echo $xmlUrl; ?>';
 
 	jQuery(function() {
 
