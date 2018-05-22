@@ -68,7 +68,8 @@ function my_acf_save_post( $post_id ) {
   WP_Filesystem();
   $rootPath		 = get_home_path();
   $uploadPath  = wp_upload_dir()['path'];
-  $articleSlug = get_post_field( 'post_name', get_post() );
+  //$articleSlug = get_post_field( 'post_name', get_post() );
+  $articleSlug	= $post_id;
   $articlePath = $rootPath.'digital-science/'.$articleSlug;
 
 	// Get fields
@@ -270,3 +271,19 @@ function my_update_notice() {
 		echo '</p></div>';
 }
 // add_action( 'admin_notices', 'my_update_notice' );
+
+
+function article_update_after_creation( $post_id ) {
+	$postUpdate = array( 'ID' => $post_id, 'post_name' => $post_id  );
+	wp_update_post( $postUpdate );
+		
+	$tempinfo = get_post_meta( $post_id, 'wpcf-article-zip' );
+	
+	$attachment_id = attachment_url_to_postid( $tempinfo[0] );
+	update_field('field_5af5637940ed5', $attachment_id, $post_id);
+	
+	update_meta( $post_id, 'wpcf-article-zip', '' );
+
+}
+
+add_action('cred_save_data','article_update_after_creation',10,2);
