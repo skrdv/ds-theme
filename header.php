@@ -11,40 +11,8 @@
 <div class="site-wrapper">
   
 <header class="siteHeader">
-  
-  <div class="collapse" id="navbarHeader">
-		<a class="menu-logo" href="/">
-			<img src="<?php echo get_template_directory_uri(); ?>/assets/img/logo-header.png" alt="Microbiology Society">
-		</a>
-	     
-		<button class="menu-toggler navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarHeader" aria-controls="navbarHeader" aria-expanded="false" aria-label="Toggle navigation">
-			<img src="<?php echo get_template_directory_uri(); ?>/assets/img/arrow-white.png">
-		</button>
-
-    <ul class="menu-nav menu-collection">
-      <li><a href="#">X-AMR Collection</a>
-        <ul>
-          <li><a href="#">Latest Articles</a></li>
-          <li><a href="#">About the Collection</a></li>
-          <li><a href="#">Journals</a></li>
-        </ul>
-      </li>
-    </ul>
-    <div class="menu-line"></div>
-    <ul class="menu-nav menu-about">
-      <li><a class="is-muted" href="#">About Us</a>
-        <ul>
-          <li><a href="#">About the Society</a></li>
-          <li><a href="#">Terms and Conditions</a></li>
-          <li><a href="#">Privacy Policy</a></li>
-          <li><a href="#">Contact us</a></li>
-          <li><a href="#">Submit a Publishing Proposal</a></li>
-        </ul>
-      </li>
-    </ul>
-	</div>
-  
-  
+	<?php get_template_part('parts/top','menu'); ?>
+	
   <div class="navbar">
     <a href="/" class="navbar-brand">
       <img src="<?php echo get_template_directory_uri(); ?>/assets/img/logo-header.png" alt="Microbiology Society">
@@ -60,4 +28,9 @@
       <span></span>
     </button>
   </div>
+<?php if (is_single()): ?>	
+<div class="bread">
+   <div class="item"><a href="/">Home</a></div>
+</div>
+<?php endif; ?>
 </header>

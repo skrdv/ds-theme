@@ -1,4 +1,3 @@
-<?php $t_names = 'Jannine K. Bailey, Jeremy L. Pinyon, Sashindran Anantham, Ruth M. Hall'; ?>
 <?php global $numpost ; ?>
 
 <div class="cardArticle">
@@ -8,7 +7,7 @@
 			<?php the_title(); ?>
 		</a>
 		<div class="cardArticle-persons">
-			<?php if (get_field('article-authors')) { the_field('article-authors'); } else { echo $t_names; } ?>
+			<?php the_field('article-authors'); ?>
 		</div>
 		<a class="cardArticle-counts">
 			<img src="<?php echo get_template_directory_uri(); ?>/assets/img/counts.png">

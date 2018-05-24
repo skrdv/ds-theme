@@ -684,7 +684,7 @@
                 }
                 if (e.doi && t.appendChild(o(".doi", {
                         children: [o("b", {
-                            text: "DOI: "
+                            text: "DOI2: "
                         }), o("a", {
                             href: e.doi,
                             target: "_new",
@@ -3741,7 +3741,7 @@
                     r = e.querySelector("article-title");
                 r && (n.title = this.annotatedText(t, r, ["document", "title"], {
                     ignore: ["xref"]
-                }))
+                }) + '<a href="">SDF</a>')
             }, this.pubDates = function(t, e) {
                 var n = t.doc;
                 if (e.length > 0) {
@@ -3774,7 +3774,7 @@
                         id: t.nextId("heading"),
                         type: "heading",
                         level: 1,
-                        content: i ? i.textContent : "Abstract"
+                        content: i ? i.textContent : 'Abstract2 <a class="PDF LINK" href="">PDF LINK</a>'
                     };
                 n.create(s), r.push(s), r = r.concat(this.bodyNodes(t, o.dom.getChildren(e), {
                     ignore: ["title", "object-id"]
@@ -3785,7 +3785,7 @@
                         id: t.nextId("heading"),
                         type: "heading",
                         level: 1,
-                        content: "Main Text"
+                        content: "Main Text 2"
                     };
                 n.create(r);
                 var i = [r].concat(this.bodyNodes(t, o.dom.getChildren(e)));
