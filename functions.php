@@ -43,7 +43,10 @@ function ds_scripts() {
   	wp_enqueue_script('ds-scripts', get_template_directory_uri().'/assets/js/scripts.js', array('jquery') );
 	
 	wp_enqueue_script('ds-nanoscroller', get_template_directory_uri().'/assets/js/jquery.nanoscroller.min.js', array('jquery') );
+	wp_enqueue_script('altmetric-badges', 'https://d1bxh8uas1mnw7.cloudfront.net/assets/embed.js');
+	wp_enqueue_script('dimensions-badges', 'https://badge.dimensions.ai/badge.js');
 	
+
 	//Slick JS
 	//wp_enqueue_script('slick-js', get_template_directory_uri().'/assets/js/slick.min.js', array('jquery') );
 	//wp_enqueue_script('slickjs-init', get_template_directory_uri().'/assets/js/slider-init.js', array('slickjs-js') );

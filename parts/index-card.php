@@ -9,9 +9,15 @@
 		<div class="cardArticle-persons">
 			<?php the_field('article-authors'); ?>
 		</div>
-		<a class="cardArticle-counts">
-			<img src="<?php echo get_template_directory_uri(); ?>/assets/img/counts.png">
-		</a>
+		<?php if (! is_home()): ?>
+		<div class="cardArticle-excerpt"><?php the_excerpt(); ?></div>
+		<?php endif; ?>
+		<div class="cardArticle-counters">
+			<?php $doi = '10.1001/jama.2016.9797'; ?>
+			<?php if ( get_field('article_doi') ) { $doi = get_field('article_doi'); } ?>
+				<span class="__dimensions_badge_embed__" data-doi="<?php echo $doi; ?>" data-style="small_rectangle"></span>
+		     	<div data-badge-type="1" data-doi="<?php echo $doi; ?>" class="altmetric-embed"></div>
+		</div>
 	</div>
 </div>
 

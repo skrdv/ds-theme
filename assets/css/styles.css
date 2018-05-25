@@ -1573,5 +1573,12 @@ body.page-template-page-cog9 {
   opacity    : 0.99;
 }
 
-
+.cardArticle-counters {
+	display: flex;
+}
 	
+.altmetric-embed {
+	width: 200px;
+	float: left;
+	margin: 0 0 0 20px;
+}

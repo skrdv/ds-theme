@@ -34,7 +34,10 @@ get_header(); ?>
 	<?php $numpost = 1; ?>
 	<?php if (have_posts()) : ?>
 		<?php  while (have_posts()) : the_post(); ?>
-		
+			
+			<?php get_template_part('parts/index','card'); ?>
+				
+			<?php /*
 			<div class="cardArticle">
 				<div class="cardArticle-body">
 					<div class="cardArticle-date"><?php the_date(); ?></div>
@@ -46,6 +49,7 @@ get_header(); ?>
   					</a>
 				</div>
 			</div>
+			*/ ?>
 	
 			<?php $numpost++ ; ?>
 		<?php endwhile; ?>
