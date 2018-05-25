@@ -89,7 +89,6 @@
       $im = new imagick($image);
       $im->writeImage($articlePath.'/'.$imageName.'.png');
     }
-    // print_r($imagesArrayFiles);
 
     // Edit XML
     $dom=new DOMDocument();
@@ -103,33 +102,49 @@
       array_push($imagesArrayXml, $imageName);
       $imagePng = $imageName.'.png';
       $imagePngPath = '/digital-science/'.$articleSlug.'/'.$imagePng;
-      echo $imagePngPath.' ';
       $image->setAttributeNS('http://www.w3.org/1999/xlink', 'href', $imagePng);
     }
     $dom->saveXML();
     $dom->save($articlePath.'/'.$articleName.'PNG.xml');
-    // print_r($imagesArrayXml);
 
     // Check images
-    if ($imagesArrayXml == $imagesArrayFiles) {
-      echo 'All images exists in archive!';
-    } else {
-      echo 'Not enough images in archive!';
-    }
+    // if ($imagesArrayXml == $imagesArrayFiles) {
+    //   echo 'All images exists in archive!';
+    // } else {
+    //   echo 'Not enough images in archive!';
+    // }
 
 
     // PARSE XML
     $xmlFile = simplexml_load_file($articlePath.'/'.$articleXml);
+    // print_r($xmlFile);
 
 		// Get Journal Meta
 		$journalTitle = $xmlFile->front->{'journal-meta'}->{'journal-title-group'}->{'journal-title'};
 		$journalIssn = $xmlFile->front->{'journal-meta'}->{'issn'}[0];
+
 		$journalPublisher = $xmlFile->front->{'journal-meta'}->{'publisher'}->{'publisher-name'};
 
     // Get Article Title
 		$articleTitle = $xmlFile->front->{'article-meta'}->{'title-group'}->{'article-title'};
 		$articleTitleItalic = $xmlFile->front->{'article-meta'}->{'title-group'}->{'article-title'}->{'italic'};
     $articleTitleFull = $articleTitle.' '.$articleTitleItalic;
+
+    // Get Article Meta
+    $articleId = $xmlFile->front->{'article-meta'}->{'article-id'};
+    $articleDoi = $articleId[1];
+    $articleDoiArray = array();
+
+    foreach ($articleDoi as $key => $value) {
+      // if ($key == 0) {
+      echo $value;
+        $articleDoi = $value;
+        array_push($articleDoiArray, $value);
+      // }
+    }
+    // print_r($articleDoi);
+    echo $articleDoi;
+
 
     // Get Article Authors
     $articleAuthorsArray = array();
@@ -190,7 +205,8 @@
     echo '<br>';
     echo '<strong>Journal:</strong> '.$journalTitle.'<br>';
     echo '<strong>Publisher:</strong> '.$journalPublisher.'<br>';
-    echo '<strong>Issn:</strong> '.$journalIssn.'<br>';
+    echo '<strong>ISSN:</strong> '.$journalIssn.'<br>';
+    echo '<strong>DOI:</strong> '.$articleDoi.'<br>';
     echo '<strong>Title:</strong> '.$articleTitleFull.'<br>';
     echo '<strong>Authors:</strong> '.$articleAuthorsList.'<br>';
     echo '<strong>Date Pub:</strong> '.$articlePubDateFull.'<br>';

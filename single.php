@@ -1,4 +1,4 @@
-<?php 
+<?php
 if (isset($wp_query->query_vars['template'])) {
 	$template = $wp_query->query_vars['template'];
 }
@@ -6,8 +6,6 @@ if (isset($wp_query->query_vars['template'])) {
 
 <?php if ($template != 'lens'): ?>
 <?php get_header(); ?>
-	
-
 
 <?php while (have_posts()): the_post(); ?>
 
@@ -18,14 +16,14 @@ if (isset($wp_query->query_vars['template'])) {
       <h1 class="intro-title"><?php the_title(); ?></h1>
       <div class="intro-authors"><?php the_field('article-authors'); ?></div>
       <div class="intro-pdf">
-        <a class="btn btn-primary" href="<?php echo wp_upload_dir()['baseurl'].'/'.get_field('article-pdf'); ?>" target="_blank">PDF 753kB</a>
-        <?php // <a class="intro-tweet" href="#">Tweet</a> ?>
+        <a class="btn btn-primary" id="pdfbtn" href="<?php echo wp_upload_dir()['baseurl'].'/'.get_field('article-pdf'); ?>" target="_blank">PDF 753kB</a>
+        <a class="intro-tweet" href="#">Tweet</a>
       </div>
     </div>
 
     <div class="article-content hidden"></div>
 
-    <div class="lens">
+    <div class="lens" id="lens">
       <iframe src="<?php the_permalink(); ?>/?article=<?php echo get_the_ID(); ?>&template=lens" width="900" height="1400"></iframe>
     </div>
 
@@ -66,6 +64,6 @@ if (isset($wp_query->query_vars['template'])) {
 	</div>
 </div>
 <?php else: ?>
-<?php get_template_part('lens'); ?>	
+<?php get_template_part('lens'); ?>
 <?php endif; ?>
 <?php get_footer(); ?>

@@ -5,21 +5,12 @@
 ?>
 
 <?php
-// WP_Filesystem();
-// $uploadPATH 	= wp_upload_dir()['path'];
-//
-// if (isset($wp_query->query_vars['article'])) {
-// 	$articleXML = get_field('article-xml', $wp_query->query_vars['article']);
-// } else {
-// 	$articleXML = 'mic000286.xml';
-// }
-// $xmlPATH = '//ds.skrdv.com/wp-content/uploads/'.$articleXML;
-?>
-
-<?php
+// Get folders
 WP_Filesystem();
 $rootPath		 = get_home_path();
 $uploadPath  = wp_upload_dir()['path'];
+$articleSlug = get_post_field('post_name', get_post());
+$articlePath = $rootPath.'digital-science/'.$articleSlug;
 
 if (isset($wp_query->query_vars['article'])) {
 	$articleXml  = get_field('article-xml', $wp_query->query_vars['article']);
@@ -102,6 +93,38 @@ if (isset($wp_query->query_vars['article'])) {
 	</script>
 
 	<?php wp_head(); ?>
+		<!-- TEST -->
+		<style media="screen">
+		/* .lens-article .content-node.cover .doi {
+			background: grey;
+		} */
+		.TEST {
+			background: green;
+		}
+		.lens-article .content-node.cover .doi {
+			display: inline-block;
+			margin-right: 30px;
+		}
+		</style>
+		<script type="text/javascript">
+			(function($) {
+				$(document).ready(function(){
+
+					function addPdfBtn(){
+						var doi = $('.lens-article .content-node.cover .doi');
+						var cover = $('body').find('.content-node.cover');
+						var pbfbtn = $('#pdfbtn');
+						var pdfurl = '<?php echo $articleUrl.'/'.get_field('article-pdf', $wp_query->query_vars['article']); ?>';
+						var pdfpath = '<?php echo $articlePath.'/'.get_field('article-pdf', $wp_query->query_vars['article']); ?>';
+						var pdfsize = '<?php echo FileSizeConvert(filesize($articlePath.'/'.get_field('article-pdf', $wp_query->query_vars['article']))); ?>';
+						$(doi).after('<a class="btn btn-primary" id="pdfbtn" target="_blank" href="'+pdfurl+'"> PDF '+pdfsize+'</a>');
+						// console.log(pdfsize);
+					}
+					setTimeout(addPdfBtn, 3000);
+
+				});
+			})(jQuery);
+		</script>
 </head>
 
 <body <?php body_class('site'); ?>>
