@@ -107,13 +107,9 @@ if (isset($wp_query->query_vars['article'])) {
 
 				function addPdfBtn(){
 					var doi = $('.lens-article .content-node.cover .doi');
-					var cover = $('body').find('.content-node.cover');
-					var pbfbtn = $('#pdfbtn');
-					var pdfurl = '<?php echo $articleUrl.'/'.get_field('article-pdf', $wp_query->query_vars['article']); ?>';
-					var pdfpath = '<?php echo $articlePath.'/'.get_field('article-pdf', $wp_query->query_vars['article']); ?>';
-					var pdfsize = '<?php echo FileSizeConvert(filesize($articlePath.'/'.get_field('article-pdf', $wp_query->query_vars['article']))); ?>';
+					var pdfurl = '<?php echo $articleUrl.'/'.get_field('article-pdf', $postID); ?>';
+					var pdfsize = '<?php echo FileSizeConvert(filesize($articlePath.'/'.get_field('article-pdf', $postID))); ?>';
 					$(doi).after('<a class="btn btn-primary" id="pdfbtn" target="_blank" href="'+pdfurl+'"> PDF '+pdfsize+'</a>');
-					// console.log(pdfsize);
 				}
 
 				function addToolsTab(){

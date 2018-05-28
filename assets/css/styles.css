@@ -971,6 +971,15 @@ iframe {
   border: none;
 }
 
+.panel.print.resource-view .surface {
+  padding: 30px;
+}
+
+.panel.print.resource-view .surface .nodes a{
+  display: block;
+  width: 200px;
+  margin-bottom: 15px;
+}
 
 
 
