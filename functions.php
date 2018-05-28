@@ -1,5 +1,6 @@
 <?php
 
+global $articleName;
 
 // Converts bytes into human readable file size.
 function FileSizeConvert($bytes)
@@ -206,6 +207,19 @@ add_action( 'admin_notices', 'display_flash_notices', 12 );
 // add_flash_notice( __(''), 'error', false );
 
 
+// Prevent file duplicates on upload
+add_action('add_attachment', function ($attachmentId) {
+    $attachment = get_post($attachmentId);
+    $path = get_attached_file($attachmentId);
+
+    $filename = sanitize_file_name($filename);
+    $filename = pathinfo($filename, PATHINFO_FILENAME) . '_' . mt_rand() . (pathinfo($filename, PATHINFO_EXTENSION) ? '.' . pathinfo($filename, PATHINFO_EXTENSION) : '');
+
+    // в $path у Вас полный путь к файлу, а в $attachment - объект WP_Post вашего аттачмента
+    // ... здесь Ваша логика для того, чтоб переименовать файл.
+});
+
+
 
 // Update post
 function my_acf_save_post( $post_id ) {
@@ -215,7 +229,6 @@ function my_acf_save_post( $post_id ) {
   $rootPath		 = get_home_path();
   $uploadPath  = wp_upload_dir()['path'];
   $articleSlug = $post_id;
-  // $articleSlug = get_post_field('post_name', get_post());
   $articlePath = $rootPath.'digital-science/'.$articleSlug;
   $articleUrl = 'http://ds.skrdv.com/digital-science/'.$articleSlug;
 
@@ -229,26 +242,36 @@ function my_acf_save_post( $post_id ) {
 	$articleAbstract = get_field('article-abstract', $post_id);
   $articleBody     = get_field('article-body', $post_id);
 
-  $articleFile     = $articleZip['filename'];
-  $articleName     = str_replace('.', '', substr($articleFile, 0, -4));
-  $articleXmlPng   = $articleName.'PNG.xml';
-  $articleXmlUrl = $articleUrl.'/'.$articleName.'.xml';
-  $articleXmlPath = $articlePath.'/'.$articleName.'.xml';
-  $articleXmlPngUrl = $articleUrl.'/'.$articleName.'PNG.xml';
-  $articleXmlPngPath = $articlePath.'/'.$articleName.'PNG.xml';
-  // $articleXml      = $articleUrl.'/'.$articleXmlPng;
-  // $articlePdf      = $articleUrl.'/'.$articleXmlPng;
 
-  $xmlFile        = $articlePath.'/'.$articleXml;
-  $xmlUrl         = $articleUrl.'/'.$articleXml;
+
 
 
 	// Get archive
 	if (!$articleZip) {
 
+    wp_update_post(array(
+      'ID' => $post_id,
+      'post_title' => $post_id
+    ));
+    update_field('article-xml', '', $post_id);
+    update_field('article-pdf', '', $post_id);
+    update_field('article-doi', '', $post_id);
+    update_field('article-authors', '', $post_id);
+    update_field('article-abstract', '', $post_id);
+    update_field('article-body', '', $post_id);
+    update_field('article-date', '', $post_id);
+    update_field('article-date', '', $post_id);
     add_flash_notice( __('ZIP archive is missing. '), 'warning', true );
 
   } else {
+
+    $articleFile    = $articleZip['filename'];
+    $articleName     = str_replace('.', '', substr($articleFile, 0, -4));
+    $articleXmlPng   = $articleName.'PNG.xml';
+    $articleXmlUrl = $articleUrl.'/'.$articleName.'.xml';
+    $articleXmlPngUrl = $articleUrl.'/'.$articleName.'PNG.xml';
+    $articleXmlPath = $articlePath.'/'.$articleName.'.xml';
+    $articleXmlPngPath = $articlePath.'/'.$articleName.'PNG.xml';
 
     // Delete all files
     $articleAllFiles = glob($articlePath.'/*');
@@ -264,19 +287,16 @@ function my_acf_save_post( $post_id ) {
 
     // Check unzip archive
     if ($articleUnzip) {
-      add_flash_notice( __('ZIP archive: '.$articlePath.'/'.$articleFile), 'info', true );
+      add_flash_notice( __('ZIP file: '.$articleFile), 'info', true );
     } else {
       add_flash_notice( __('Unzip error!'), 'error', true );
     }
 
-	}
+    // Check PDF file
+    // if (!$articlePdf) {
 
-
-  	// Check PDF file
-  	if (!$articlePdf) {
-
-  		$articlePdf = $articleName.'.pdf';
-  		// $articlePdfUrl = $articleUrl.'/'.$articlePdf;
+      $articlePdf = $articleName.'.pdf';
+      // $articlePdfUrl = $articleUrl.'/'.$articlePdf;
 
       // Check for existing xml file
       // $articlePdfArchivePath = $articlePath.'/'.$articleName.'.pdf';
@@ -285,316 +305,233 @@ function my_acf_save_post( $post_id ) {
       // $articlePdfUrl = $articleUrl.'/'.$articleName.'.pdf';
 
       add_flash_notice( __('PDF file: '.$articleUrl.'/'.$articlePdf), 'info', true );
-
-    //   if ($articlePdfArchivePath === $articlePdfFile) {
-    //     add_flash_notice( __('PDF file exists: '.$articlePdfUrl), 'info', true );
-    //   } else {
-    //     add_flash_notice( __('PDF file is missed.'), 'error', true );
-    //   }
-  	} else {
-
-      $articlePdf = $articleName.'.pdf';
-
-      add_flash_notice( __('PDF file not changed: '.$articleUrl.'/'.$articlePdf), 'warning', true );
-    }
-
-
-
-  // Check XML
-	if ($articleXml) {
-
-    // Edit XML
-    $dom=new DOMDocument();
-    $dom->load($articleXmlUrl);
-    if (!$dom->load($articleXmlUrl)){
-     add_flash_notice( __('Error in XML document.'), 'error', true );
-    }
-
-    $images = $dom->documentElement->getElementsByTagName('graphic');
-
-    $imagesArrayXml = array();
-    foreach ($images as $image) {
-      $imageSrc = $image->getAttributeNS('http://www.w3.org/1999/xlink', 'href');
-      $imageName = str_replace('.', '', substr($imageSrc, 0, -4));
-      $imagePngPath = '/digital-science/'.$articleSlug.'/'.$imageName.'.png';
-      $image->setAttributeNS('http://www.w3.org/1999/xlink', 'href', $imagePngPath);
-      array_push($imagesArrayXml, $imageName);
-    }
-    $dom->saveXML();
-    // $dom->save($articleXmlPngPath);
-    $dom->save($articlePath.'/'.$articleName.'PNG.xml');
-
-    add_flash_notice( __('XML file: '.$articleUrl.'/'.$articleXml), 'info', true );
-
-    // Check for existing xml file
-    // $articleXmlArchivePath = $articlePath.'/'.$articleName.'.xml';
-    // $articleXmlFiles = glob($articlePath.'/*.xml');
-    // $articleXmlFile  = $articleXmlFiles[0];
-
-    // $articleXml = $articleXmlPng;
-    $articleXml = $articleName.'.xml';
-    //
-    // if ($articleXmlArchivePath === $articleXmlFile) {
-    //   add_flash_notice( __('XML file exists: '.$articleXml), 'info', true );
+      //   if ($articlePdfArchivePath === $articlePdfFile) {
+      //     add_flash_notice( __('PDF file exists: '.$articlePdfUrl), 'info', true );
+      //   } else {
+      //     add_flash_notice( __('PDF file is missed.'), 'error', true );
+      //   }
     // } else {
-    //   add_flash_notice( __('XML file is missed.'), 'error', true );
+      // $articlePdf = $articleName.'.pdf';
+      // add_flash_notice( __('PDF file: '.$articleUrl.'/'.$articlePdf), 'info', true );
     // }
-	} else {
 
-    // $articleXmlUrl = $articleUrl.'/'.$articleName.'PNG.xml';
-    $articleXml = $articleXmlPng;
+    // Check ImageMagick
+    // if (extension_loaded('imagick')) {
+    //   add_flash_notice( __('ImageMagick Loaded.'), 'info', true );
+    // } else {
+    //   add_flash_notice( __('Extension ImageMagick not found by extension_loaded.'), 'error', true );
+    // }
 
-    add_flash_notice( __('XML file not changed: '.$articleUrl.'/'.$articleXml), 'info', true );
-
-  }
-
-  // Update permissions
-  chmod_recursive($articlePath, true);
-
-  // Check ImageMagick
-  if (extension_loaded('imagick')) {
-    add_flash_notice( __('ImageMagick Loaded.'), 'info', true );
-  } else {
-    add_flash_notice( __('Extension ImageMagick not found by extension_loaded.'), 'error', true );
-  }
-
-  // Convert images to png
-  $imagesTif = glob($articlePath.'/*.tif');
-  if ($imagesTif) {
-    $imagesArrayFiles = array();
-    foreach($imagesTif as $image) {
-      $imageName = str_replace($articlePath.'/', '', substr($image, 0, -4));
-      array_push($imagesArrayFiles, $imageName);
-      $im = new imagick($image);
-      $im->writeImage($articlePath.'/'.$imageName.'.png');
-    }
-  }
-
-
-  // Check images for exists
-  // if ($imagesArrayXml === $imagesArrayFiles) {
-  //   add_flash_notice( __('All images in archive.'), 'info', true );
-  // } elseif(!$imagesArrayXml) {
-  //   add_flash_notice( __('No images in archive.'), 'error', true );
-  // } else {
-  //   add_flash_notice( __('Not enough images in archive.'), 'error', true );
-  // }
-
-	// Parse XML
-  if ($articleXml) {
-
-    // $articleXmlUrl = $articleUrl.'/'.$articleName.'PNG.xml';
-
-    // $xmlFile = simplexml_load_file($articlePath.'/'.$articleXml); // or die("Error: Cannot create object");
-  	$xmlFile = simplexml_load_file($articleXmlPngUrl); // or die("Error: Cannot create object");
-
-    // Get Journal Meta
-    $journalTitle = $xmlFile->front->{'journal-meta'}->{'journal-title-group'}->{'journal-title'};
-    $journalIssn = $xmlFile->front->{'journal-meta'}->{'issn'}[0];
-    $journalPublisher = $xmlFile->front->{'journal-meta'}->{'publisher'}->{'publisher-name'};
-
-    // Get Article Title
-    $articleTitle = $xmlFile->front->{'article-meta'}->{'title-group'}->{'article-title'};
-    $articleTitleItalic = $xmlFile->front->{'article-meta'}->{'title-group'}->{'article-title'}->{'italic'};
-    $articleTitleFull = $articleTitle.' '.$articleTitleItalic;
-
-    // Update Title
-    if (!$articleTitle) {
-      // $articleTitleFull = get_post_field('post_name', get_post());
-      $articleTitle = $articleSlug;
-      add_flash_notice( __('Article Title updated.'), 'info', true );
-    } else {
-      add_flash_notice( __('Article Title no changed.'), 'info', true );
-    }
-
-    // Get Article Meta
-    $articleId = $xmlFile->front->{'article-meta'}->{'article-id'};
-    // $articleDoi = $articleId[1];
-    $articleDoiArray = array();
-    foreach ($articleId as $key => $value) {
-      // if ($key === 0) {
-      // echo $value;
-        $articleDoi = $value;
-        array_push($articleDoiArray, $value);
-      // }
-    }
-    $articleDoiList = implode(', ', $articleDoiArray);
-    $articleDoi = $articleDoiList;
-    // $articleDoi = json_decode($articleDoiArray[1]);
-    // $articleDoi = json_encode($articleDoiArray[0]);
-
-    // Get Article Authors
-    if (!$articleAuthors) {
-      $articleAuthorsArray = array();
-      $articleAuthors = $xmlFile->front->{'article-meta'}->{'contrib-group'}->{'contrib'};
-      foreach ($articleAuthors as $value) {
-        $articleAuthorName = $value->name->{'given-names'};
-        $articleAuthorSurname = $value->name->{'surname'};
-        $articleAuthorFullName = $articleAuthorName.' '.$articleAuthorSurname;
-        array_push($articleAuthorsArray, $articleAuthorFullName);
+    // Convert images to png
+    $imagesTif = glob($articlePath.'/*.tif');
+    if ($imagesTif) {
+      $imagesArrayFiles = array();
+      foreach($imagesTif as $image) {
+        $imageName = str_replace($articlePath.'/', '', substr($image, 0, -4));
+        array_push($imagesArrayFiles, $imageName);
+        $im = new imagick($image);
+        $im->writeImage($articlePath.'/'.$imageName.'.png');
       }
-      $articleAuthorsList = implode(', ', $articleAuthorsArray);
-      $articleAuthors = $articleAuthorsList;
-      add_flash_notice( __('Article Authors updated.'), 'info', true );
-    } else {
-      add_flash_notice( __('Article Authors not updated.'), 'error', true );
     }
 
-    // Get Article Dates
-    // if ($articleDate) {
-      $articlePubDateD = $xmlFile->front->{'article-meta'}->{'pub-date'}->{'day'};
-      $articlePubDateM = $xmlFile->front->{'article-meta'}->{'pub-date'}->{'month'};
-      $articlePubDateY = $xmlFile->front->{'article-meta'}->{'pub-date'}->{'year'};
-      $articlePubDateFull = $articlePubDateD.'.'.$articlePubDateM.'.'.$articlePubDateY;
-      $articleReceivedDateM = $xmlFile->front->{'article-meta'}->{'history'}->{'date'}[0]->{'month'};
-      $articleReceivedDateD = $xmlFile->front->{'article-meta'}->{'history'}->{'date'}[0]->{'day'};
-      $articleReceivedDateY = $xmlFile->front->{'article-meta'}->{'history'}->{'date'}[0]->{'year'};
-      $articleReceivedDateFull = $articleReceivedDateD.'.'.$articleReceivedDateM.'.'.$articleReceivedDateY;
-      $articleAcceptedDateM = $xmlFile->front->{'article-meta'}->{'history'}->{'date'}[1]->{'month'};
-      $articleAcceptedDateD = $xmlFile->front->{'article-meta'}->{'history'}->{'date'}[1]->{'day'};
-      $articleAcceptedDateY = $xmlFile->front->{'article-meta'}->{'history'}->{'date'}[1]->{'year'};
-      $articleAcceptedDateFull = $articleAcceptedDateD.'.'.$articleAcceptedDateM.'.'.$articleAcceptedDateY;
-      $articleDate = $articlePubDateFull;
-    // }
-
-    // Get Article Abstract
-    // if (!$articleAbstract) {
-      // $articleAbstractString = '';
-      // $articleAbstractArray = array();
-      // $articleAbstractArray = $xmlFile->front->{'article-meta'}->{'abstract'}->{'p'};
-      // foreach ($articleAbstract as $value) {
-      //   $articleAbstractString .= $value.' ';
-      //   foreach ($value->bold as $bold) {
-      //     $articleAbstractString .= '<strong>'.$bold.'</strong><br>';
-      //   }
-      //   foreach ($value->italic as $italic) {
-      //     $articleAbstractString .= '<italic>'.$italic.'</iitalic>';
-      //   }
-      // }
-      // $articleAbstract = explode(' ', json_decode($articleAbstractArray));
-    //   add_flash_notice( __('Article Abstract updated.'), 'info', true );
+    // Check images for exists
+    // if ($imagesArrayXml === $imagesArrayFiles) {
+    //   add_flash_notice( __('All images in archive.'), 'info', true );
+    // } elseif(!$imagesArrayXml) {
+    //   add_flash_notice( __('No images in archive.'), 'error', true );
     // } else {
-    //   add_flash_notice( __('Article Abstract not changed.'), 'error', true );
+    //   add_flash_notice( __('Not enough images in archive.'), 'error', true );
     // }
 
 
+    // Check XML file
+    // if ($articleXml) {
 
-    function getContent(&$NodeContent="",$nod)
-    {    $NodList=$nod->childNodes;
-        for( $j=0 ;  $j < $NodList->length; $j++ )
-        {       $nod2=$NodList->item($j);//Node j
-            $nodemane=$nod2->nodeName;
-            $nodevalue=$nod2->nodeValue;
-            if($nod2->nodeType == XML_TEXT_NODE)
-                $NodeContent .=  $nodevalue;
-            else
-            {     $NodeContent .= "<$nodemane ";
-               $attAre=$nod2->attributes;
-               foreach ($attAre as $value)
-                  $NodeContent .="{$value->nodeName}='{$value->nodeValue}'" ;
-                $NodeContent .=">";
-                getContent($NodeContent,$nod2);
-                $NodeContent .= "</$nodemane>";
-            }
+      $articleXml = $articleName.'.xml';
+
+      // Edit XML
+      $dom=new DOMDocument();
+      // $dom->load($articleXmlUrl);
+      $dom->load($articleXmlPath);
+      // if (!$dom->load($articleXmlUrl)){
+      //  add_flash_notice( __('Error in XML document.'), 'error', true );
+      // }
+
+      $images = $dom->documentElement->getElementsByTagName('graphic');
+
+      $imagesArrayXml = array();
+      foreach ($images as $image) {
+        $imageSrc = $image->getAttributeNS('http://www.w3.org/1999/xlink', 'href');
+        $imageName = str_replace('.', '', substr($imageSrc, 0, -4));
+        $imagePngPath = '/digital-science/'.$articleSlug.'/'.$imageName.'.png';
+        $image->setAttributeNS('http://www.w3.org/1999/xlink', 'href', $imagePngPath);
+        array_push($imagesArrayXml, $imageName);
+      }
+      $dom->saveXML();
+      // $dom->save($articleXmlPngPath);
+      $dom->save($articlePath.'/'.$articleName.'PNG.xml');
+      chmod_recursive($articlePath, true);
+
+
+      // Check for existing xml file
+      // $articleXmlArchivePath = $articlePath.'/'.$articleName.'.xml';
+      // $articleXmlFiles = glob($articlePath.'/*.xml');
+      // $articleXmlFile  = $articleXmlFiles[0];
+
+      // $articleXml = $articleXmlPng;
+      $articleXml = $articleName.'PNG.xml';
+
+
+
+      add_flash_notice( __('XML file: '.$articleXmlPngUrl), 'info', true );
+      // if ($articleXmlArchivePath === $articleXmlFile) {
+      //   add_flash_notice( __('XML file exists: '.$articleXml), 'info', true );
+      // } else {
+      //   add_flash_notice( __('XML file is missed.'), 'error', true );
+      // }
+    // } else {
+    //   $articleXml = $articleName.'PNG.xml';
+    //   add_flash_notice( __('XML file not changed: '.$articleXmlPngUrl), 'info', true );
+    // }
+
+  	// Parse XML
+    if ($articleXml) {
+
+    	$xmlFile = simplexml_load_file($articleXmlPngUrl);
+    	// $xmlFile = simplexml_load_file($articleXmlPngPath);
+      // $xmlFile = simplexml_load_file($articlePath.'/'.$articleXml);
+
+      // Get Journal Meta
+      $journalTitle = $xmlFile->front->{'journal-meta'}->{'journal-title-group'}->{'journal-title'};
+      $journalIssn = $xmlFile->front->{'journal-meta'}->{'issn'}[0];
+      $journalPublisher = $xmlFile->front->{'journal-meta'}->{'publisher'}->{'publisher-name'};
+
+      // Get Article Title
+      $articleTitle = $xmlFile->front->{'article-meta'}->{'title-group'}->{'article-title'};
+      $articleTitleItalic = $xmlFile->front->{'article-meta'}->{'title-group'}->{'article-title'}->{'italic'};
+      $articleTitleFull = $articleTitle.' '.$articleTitleItalic;
+
+      // Update Title
+      if (!$articleTitle) {
+        $articleTitle = $post_id;
+        // $postUpdate = array( 'ID' => $post_id, 'post_title' => $articleTitle );
+        // add_flash_notice( __('Article Title updated.'), 'info', true );
+      } else {
+        $articleTitle = $articleTitleFull;
+        // add_flash_notice( __('Article Title no changed.'), 'info', true );
+      }
+
+      // Get Article Meta
+      $articleId = $xmlFile->front->{'article-meta'}->{'article-id'};
+      // $articleDoi = $articleId[1];
+      $articleDoiArray = array();
+
+      foreach ($articleId as $value) {
+        // if ($key === 0) {
+          $articleDoi = $value.'';
+          // $articleDoi = $value;
+          // $articleDoi = $value;
+          // array_push($articleDoiArray, $value);
+        // }
+      }
+      // $articleDoiList = implode(', ', $value);
+      // $articleDoi = $articleDoiArray[0];
+      // $articleDoi = json_decode($articleDoiArray[1]);
+      // $articleDoi = json_encode($articleDoiArray[0]);
+
+      // Get Article Authors
+      if (!$articleAuthors) {
+        $articleAuthorsArray = array();
+        $articleAuthors = $xmlFile->front->{'article-meta'}->{'contrib-group'}->{'contrib'};
+        foreach ($articleAuthors as $value) {
+          $articleAuthorName = $value->name->{'given-names'};
+          $articleAuthorSurname = $value->name->{'surname'};
+          $articleAuthorFullName = $articleAuthorName.' '.$articleAuthorSurname;
+          array_push($articleAuthorsArray, $articleAuthorFullName);
         }
+        $articleAuthorsList = implode(', ', $articleAuthorsArray);
+        $articleAuthors = $articleAuthorsList;
+        // add_flash_notice( __('Article Authors updated.'), 'info', true );
+      } else {
+        // add_flash_notice( __('Article Authors not updated.'), 'error', true );
+      }
+
+      // Get Article Dates
+      // if ($articleDate) {
+        $articlePubDateD = $xmlFile->front->{'article-meta'}->{'pub-date'}->{'day'};
+        $articlePubDateM = $xmlFile->front->{'article-meta'}->{'pub-date'}->{'month'};
+        $articlePubDateY = $xmlFile->front->{'article-meta'}->{'pub-date'}->{'year'};
+        $articlePubDateFull = $articlePubDateD.'.'.$articlePubDateM.'.'.$articlePubDateY;
+        $articleReceivedDateM = $xmlFile->front->{'article-meta'}->{'history'}->{'date'}[0]->{'month'};
+        $articleReceivedDateD = $xmlFile->front->{'article-meta'}->{'history'}->{'date'}[0]->{'day'};
+        $articleReceivedDateY = $xmlFile->front->{'article-meta'}->{'history'}->{'date'}[0]->{'year'};
+        $articleReceivedDateFull = $articleReceivedDateD.'.'.$articleReceivedDateM.'.'.$articleReceivedDateY;
+        $articleAcceptedDateM = $xmlFile->front->{'article-meta'}->{'history'}->{'date'}[1]->{'month'};
+        $articleAcceptedDateD = $xmlFile->front->{'article-meta'}->{'history'}->{'date'}[1]->{'day'};
+        $articleAcceptedDateY = $xmlFile->front->{'article-meta'}->{'history'}->{'date'}[1]->{'year'};
+        $articleAcceptedDateFull = $articleAcceptedDateD.'.'.$articleAcceptedDateM.'.'.$articleAcceptedDateY;
+        $articleDate = $articlePubDateFull;
+      // }
+
+      function getContent(&$NodeContent="", $nod) {    $NodList=$nod->childNodes;
+          for( $j=0 ;  $j < $NodList->length; $j++ )
+          {       $nod2=$NodList->item($j);//Node j
+              $nodemane=$nod2->nodeName;
+              $nodevalue=$nod2->nodeValue;
+              if($nod2->nodeType == XML_TEXT_NODE)
+                  $NodeContent .=  $nodevalue;
+              else
+              {     $NodeContent .= "<$nodemane ";
+                 $attAre=$nod2->attributes;
+                 foreach ($attAre as $value)
+                    $NodeContent .="{$value->nodeName}='{$value->nodeValue}'" ;
+                  $NodeContent .=">";
+                  getContent($NodeContent,$nod2);
+                  $NodeContent .= "</$nodemane>";
+              }
+          }
+
+      }
+
+      // Get XML file
+      $dom=new DOMDocument();
+      $dom->load($articleXmlUrl);
+      if (!$dom->load($articleXmlUrl)){
+       add_flash_notice( __('Error in XML document.'), 'error', true );
+      }
+
+      // Get Article Abstarct
+      $abstract = $dom->documentElement->getElementsByTagName('abstract');
+      $nodItem = $abstract->item(0);
+      $abstractHtml = getContent($aContent, $nodItem);
+      $articleAbstract = $aContent;
+
+      // Get Article Body
+      $body = $dom->documentElement->getElementsByTagName('body');
+      $bodyItem = $body->item(0);
+      $contentHtml = getContent($bContent, $bodyItem);
+      $articleBody = $bContent;
+
 
     }
 
-    // Get Abstarct
-    $dom=new DOMDocument();
-    $dom->load($articleXmlUrl);
-    // $dom->loadXML($xmlUrl);
-    // $dom->loadHTML($xmlUrl);
 
-    if (!$dom->load($xmlUrl)){
-     add_flash_notice( __('Error in XML document.'), 'error', true );
-    }
+    wp_update_post(array(
+      'ID' => $post_id,
+      'post_title' => $articleTitle
+    ));
+    update_field('debug', $articleXmlPng);
+    update_field('article-xml', $articleXml);
+    update_field('article-pdf', $articlePdf);
+    update_field('article-doi', $articleDoi);
+    update_field('article-date', $articleDate);
+    update_field('article-authors', $articleAuthors);
+    update_field('article-abstract', $articleAbstract);
+    update_field('article-body', $articleBody);
 
-    $abstract = $dom->documentElement->getElementsByTagName('abstract');
-    $nodItem = $abstract->item(0);
-    $abstractHtml = getContent($aContent, $nodItem);
-    $articleAbstract = $aContent;
-
-    // Get Article Body
-    $body = $dom->documentElement->getElementsByTagName('body');
-    $bodyItem = $body->item(0);
-    $contentHtml = getContent($bContent, $bodyItem);
-    $articleBody = $bContent;
-
-    // $articleBodyArray = array();
-    // $articleBodySec = $xmlFile->body->sec;
-    // foreach ($articleBodySec as $value) {
-    //   $articleBodySecTitle = '<u>'.$value->title.'</u><br>';
-    //   $articleBodySecP = $value->p.'<br>';
-    //   $articleBodyString .= $articleBodySecTitle.$articleBodySecP;
-    //   foreach ($value->italic as $value) {
-    //     $articleBodyString .= '<i>'.$value.'</i>';
-    //   }
-    // }
-    // $articleBody = $articleBodyString;
-  }
+	}
 
 
-
-
-  // update_field('debug', $articleXml);
-  update_field('debug', $articleUrl);
-
-  if (!$articleZip) {
-
-    // $articleXml = $articlePdf = $articleDate = $articleAuthors = $articleAbstract = $articleBody = '';
-    update_field('article-xml', '', $post_id);
-    update_field('article-pdf', '', $post_id);
-    update_field('article-doi', '', $post_id);
-    update_field('article-authors', '', $post_id);
-    update_field('article-abstract', '', $post_id);
-    update_field('article-body', '', $post_id);
-    update_field('article-date', '', $post_id);
-    update_field('article-date', '', $post_id);
-
-  } else {
-
-    update_field('article-xml', $articleXml, $post_id);
-    update_field('article-pdf', $articlePdf, $post_id);
-    update_field('article-doi', $articleDoi, $post_id);
-    update_field('article-date', $articleDate, $post_id);
-    update_field('article-authors', $articleAuthors, $post_id);
-    update_field('article-abstract', $articleAbstract, $post_id);
-    update_field('article-body', $articleBody, $post_id);
-
-    // update_field('article-date', $articleXml, $post_id);
-
-
-  }
-  //
-  // if ($articleXml) {
-  //   update_field('article-xml', $articleXml);
-  // }
-  // if ($articlePdf) {
-  //   update_field('article-pdf', $articlePdf);
-  // }
-  // if ($articleDate) {
-  //   update_field('article-date', $articleDate, $post_id);
-  // }
-  // if ($articleDoiList) {
-  //   update_field('article-doi', $articlePdf);
-  // }
-  // if ($articleAuthors) {
-  //   update_field('article-authors', $articleAuthors);
-  // }
-  // if ($articleAbstract) {
-  //   update_field('article-abstract', $articleAbstract);
-  // }
-  // if ($articleBody) {
-  //   update_field('article-body', $articleBody);
-  // }
-
-
-
-
-
-  // add_flash_notice( __('Update all post fields.'), 'warning', true );
-  // add_flash_notice( __('All fields updated.'), 'info', true );
 }
 add_action('acf/save_post', 'my_acf_save_post', 20);
 
