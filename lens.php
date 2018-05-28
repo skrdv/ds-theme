@@ -13,6 +13,7 @@ $articleSlug = get_post_field('post_name', get_post());
 $articlePath = $rootPath.'digital-science/'.$articleSlug;
 
 if (isset($wp_query->query_vars['article'])) {
+	$postID = $wp_query->query_vars['article'];
 	$articleXml  = get_field('article-xml', $wp_query->query_vars['article']);
 	$articleSlug = $wp_query->query_vars['article'];
 	$articlePath = $rootPath.'digital-science/'.$articleSlug;
@@ -119,7 +120,7 @@ if (isset($wp_query->query_vars['article'])) {
 
 					$('.menu-bar .context-toggles').append('<a href="#" title="Tools" class="context-toggle print"><i class="fa fa-print"></i> Tools</a>');
 
-					$('.menu-bar').before('<div class="panel print resource-view hidden"><div class="surface resource-view print"><div class="nodes"><a class="btn btn-primary" id="printfulltext" target="_blank" href="#"> Print Full Text</a><a class="btn btn-primary" id="printabstract" target="_blank" href="#"> Print Abstract</a></div></div><div class="surface-scrollbar print hidden"><div class="visible-area" style="top: 0px; height: 265.286px;"></div></div></div>');
+					$('.menu-bar').before('<div class="panel print resource-view hidden"><div class="surface resource-view print"><div class="nodes"><a class="btn btn-primary" id="print-abstract" target="_blank" href="/print-abstract/?article='+<?php echo $postID; ?>+'"> Print Abstract</a><a class="btn btn-primary" id="print-fulltext" target="_blank" href="/print-full-text/?article='+<?php echo $postID; ?>+'"> Print Full Text</a></div></div><div class="surface-scrollbar print hidden"><div class="visible-area" style="top: 0px; height: 265.286px;"></div></div></div>');
 
 					$('.context-toggle').on('click', function(e){
 						e.preventDefault();
@@ -132,7 +133,7 @@ if (isset($wp_query->query_vars['article'])) {
 
 						$('.context-toggle').removeClass('active');
 						$(tabClass).addClass('active');
-						
+
 						$('.panel.resource-view').addClass('hidden');
 						$(panelClass).removeClass('hidden');
 					});

@@ -1,0 +1,7 @@
+.print .title {
+  font-size: 24px;
+}
+.print .content {
+  line-height: 28.5px;
+  font-size: 17px;
+}
