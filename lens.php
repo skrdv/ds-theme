@@ -14,7 +14,6 @@ $articlePath = $rootPath.'digital-science/'.$articleSlug;
 
 if (isset($wp_query->query_vars['article'])) {
 	$articleXml  = get_field('article-xml', $wp_query->query_vars['article']);
-	// $articleSlug = get_post_field('post_name', get_post());
 	$articleSlug = $wp_query->query_vars['article'];
 	$articlePath = $rootPath.'digital-science/'.$articleSlug;
 	$articleUrl  = '//ds.skrdv.com/digital-science/'.$articleSlug;
@@ -93,38 +92,60 @@ if (isset($wp_query->query_vars['article'])) {
 	</script>
 
 	<?php wp_head(); ?>
-		<!-- TEST -->
-		<style media="screen">
-		/* .lens-article .content-node.cover .doi {
-			background: grey;
-		} */
-		.TEST {
-			background: green;
-		}
-		.lens-article .content-node.cover .doi {
-			display: inline-block;
-			margin-right: 30px;
-		}
-		</style>
-		<script type="text/javascript">
-			(function($) {
-				$(document).ready(function(){
 
-					function addPdfBtn(){
-						var doi = $('.lens-article .content-node.cover .doi');
-						var cover = $('body').find('.content-node.cover');
-						var pbfbtn = $('#pdfbtn');
-						var pdfurl = '<?php echo $articleUrl.'/'.get_field('article-pdf', $wp_query->query_vars['article']); ?>';
-						var pdfpath = '<?php echo $articlePath.'/'.get_field('article-pdf', $wp_query->query_vars['article']); ?>';
-						var pdfsize = '<?php echo FileSizeConvert(filesize($articlePath.'/'.get_field('article-pdf', $wp_query->query_vars['article']))); ?>';
-						$(doi).after('<a class="btn btn-primary" id="pdfbtn" target="_blank" href="'+pdfurl+'"> PDF '+pdfsize+'</a>');
-						// console.log(pdfsize);
-					}
-					setTimeout(addPdfBtn, 3000);
+	<!-- Custom Lens -->
+	<style media="screen">
+	.lens-article .content-node.cover .doi {
+		display: inline-block;
+		margin-right: 30px;
+	}
+	</style>
+	<script type="text/javascript">
+		(function($) {
+			$(document).ready(function(){
 
-				});
-			})(jQuery);
-		</script>
+				function addPdfBtn(){
+					var doi = $('.lens-article .content-node.cover .doi');
+					var cover = $('body').find('.content-node.cover');
+					var pbfbtn = $('#pdfbtn');
+					var pdfurl = '<?php echo $articleUrl.'/'.get_field('article-pdf', $wp_query->query_vars['article']); ?>';
+					var pdfpath = '<?php echo $articlePath.'/'.get_field('article-pdf', $wp_query->query_vars['article']); ?>';
+					var pdfsize = '<?php echo FileSizeConvert(filesize($articlePath.'/'.get_field('article-pdf', $wp_query->query_vars['article']))); ?>';
+					$(doi).after('<a class="btn btn-primary" id="pdfbtn" target="_blank" href="'+pdfurl+'"> PDF '+pdfsize+'</a>');
+					// console.log(pdfsize);
+				}
+
+				function addToolsTab(){
+
+					$('.menu-bar .context-toggles').append('<a href="#" title="Tools" class="context-toggle print"><i class="fa fa-print"></i> Tools</a>');
+
+					$('.menu-bar').before('<div class="panel print resource-view hidden"><div class="surface resource-view print"><div class="nodes"><a class="btn btn-primary" id="printfulltext" target="_blank" href="#"> Print Full Text</a><a class="btn btn-primary" id="printabstract" target="_blank" href="#"> Print Abstract</a></div></div><div class="surface-scrollbar print hidden"><div class="visible-area" style="top: 0px; height: 265.286px;"></div></div></div>');
+
+					$('.context-toggle').on('click', function(e){
+						e.preventDefault();
+
+						var tabName, tabClass, panelClass;
+
+						tabName = $(this).attr('class').replace('context-toggle ', '').replace(' active', '');
+						tabClass = '.context-toggle.'+tabName;
+						panelClass = '.panel.'+tabName+'.resource-view';
+
+						$('.context-toggle').removeClass('active');
+						$(tabClass).addClass('active');
+						
+						$('.panel.resource-view').addClass('hidden');
+						$(panelClass).removeClass('hidden');
+					});
+
+				}
+
+				setTimeout(addPdfBtn, 3000);
+				setTimeout(addToolsTab, 3000);
+
+			});
+		})(jQuery);
+	</script>
+
 </head>
 
 <body <?php body_class('site'); ?>>
