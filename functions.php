@@ -119,53 +119,6 @@ add_filter( 'searchwp_fuzzy_threshold', 'my_fuzzy_threshold' );
 
 
 
-
-
-
-// Define the action and give functionality to the action.
-// function ds_action() {
-//   do_action( 'ds_action' );
-// }
-//
-// // Register the action with WordPress.
-// function ds_action_example() {
-//   echo '<div class="updated notice"><p>';
-//   echo _e( 'Success! Article updated.', 'ds-theme' );
-//   echo '</p></div>';
-// }
-// add_action( 'ds_action', 'ds_action_example' );
-//
-// function ds_admin_notice() {
-//   ds_action();
-// }
-// // add_action( 'admin_notices', 'ds_admin_notice' );
-
-
-
-// Add admin notice
-// function SITE_profile_update_notice() {
-// // Add this to your code where you want to the transient to fire  after function
-// set_transient( 'fx-admin-notice-panel', true, 5 );
-// }
-// add_action( 'admin_notices', 'fx_admin_notice_example_notice' );
-
-
-/** Admin Notice on Activation. @since 0.1.0 */
-// function fx_admin_notice_example_notice(){
-
-    /* Check transient, if available display notice */
-    // if( get_transient( 'fx-admin-notice-panel' ) ){
-        // echo '<div class="updated notice is-dismissible">
-        //     <div class="notice"><p>Good Job!</p></div>
-        // </div>';
-
-        /* Delete transient, only display this notice once. */
-        // delete_transient( 'fx-admin-notice-panel' );
-    // }
-// }
-
-
-
 // Add a flash notice to {prefix}options table until a full page refresh is done
 function add_flash_notice( $notice = "", $type = "warning", $dismissible = true ) {
   // Here we return the notices saved on our option, if there are not notices, then an empty array is returned
@@ -293,26 +246,18 @@ function my_acf_save_post( $post_id ) {
     }
 
     // Check PDF file
-    // if (!$articlePdf) {
+    $articlePdf = $articleName.'.pdf';
+    add_flash_notice( __('PDF file: '.$articleUrl.'/'.$articlePdf), 'info', true );
 
-      $articlePdf = $articleName.'.pdf';
-      // $articlePdfUrl = $articleUrl.'/'.$articlePdf;
-
-      // Check for existing xml file
-      // $articlePdfArchivePath = $articlePath.'/'.$articleName.'.pdf';
-      // $articlePdfFiles = glob($articlePath.'/*.pdf');
-      // $articlePdfFile  = $articlePdfFiles[0];
-      // $articlePdfUrl = $articleUrl.'/'.$articleName.'.pdf';
-
-      add_flash_notice( __('PDF file: '.$articleUrl.'/'.$articlePdf), 'info', true );
-      //   if ($articlePdfArchivePath === $articlePdfFile) {
-      //     add_flash_notice( __('PDF file exists: '.$articlePdfUrl), 'info', true );
-      //   } else {
-      //     add_flash_notice( __('PDF file is missed.'), 'error', true );
-      //   }
+    // Check for existing xml file
+    // $articlePdfArchivePath = $articlePath.'/'.$articleName.'.pdf';
+    // $articlePdfFiles = glob($articlePath.'/*.pdf');
+    // $articlePdfFile  = $articlePdfFiles[0];
+    // $articlePdfUrl = $articleUrl.'/'.$articleName.'.pdf';
+    // if ($articlePdfArchivePath === $articlePdfFile) {
+    //  add_flash_notice( __('PDF file exists: '.$articlePdfUrl), 'info', true );
     // } else {
-      // $articlePdf = $articleName.'.pdf';
-      // add_flash_notice( __('PDF file: '.$articleUrl.'/'.$articlePdf), 'info', true );
+    //  add_flash_notice( __('PDF file is missed.'), 'error', true );
     // }
 
     // Check ImageMagick
@@ -345,53 +290,39 @@ function my_acf_save_post( $post_id ) {
 
 
     // Check XML file
-    // if ($articleXml) {
+    $articleXml = $articleName.'.xml';
 
-      $articleXml = $articleName.'.xml';
+    // Edit XML
+    $dom=new DOMDocument();
+    $dom->load($articleXmlPath);
+    // $dom->load($articleXmlUrl);
+    // if (!$dom->load($articleXmlUrl)){
+    //  add_flash_notice( __('Error in XML document.'), 'error', true );
+    // }
 
-      // Edit XML
-      $dom=new DOMDocument();
-      // $dom->load($articleXmlUrl);
-      $dom->load($articleXmlPath);
-      // if (!$dom->load($articleXmlUrl)){
-      //  add_flash_notice( __('Error in XML document.'), 'error', true );
-      // }
+    $images = $dom->documentElement->getElementsByTagName('graphic');
+    $imagesArrayXml = array();
+    foreach ($images as $image) {
+      $imageSrc = $image->getAttributeNS('http://www.w3.org/1999/xlink', 'href');
+      $imageName = str_replace('.', '', substr($imageSrc, 0, -4));
+      $imagePngPath = '/digital-science/'.$articleSlug.'/'.$imageName.'.png';
+      $image->setAttributeNS('http://www.w3.org/1999/xlink', 'href', $imagePngPath);
+      array_push($imagesArrayXml, $imageName);
+    }
+    $dom->saveXML();
+    $dom->save($articlePath.'/'.$articleName.'PNG.xml');
+    chmod_recursive($articlePath, true);
+    $articleXml = $articleName.'PNG.xml';
+    add_flash_notice( __('XML file: '.$articleXmlPngUrl), 'info', true );
 
-      $images = $dom->documentElement->getElementsByTagName('graphic');
-
-      $imagesArrayXml = array();
-      foreach ($images as $image) {
-        $imageSrc = $image->getAttributeNS('http://www.w3.org/1999/xlink', 'href');
-        $imageName = str_replace('.', '', substr($imageSrc, 0, -4));
-        $imagePngPath = '/digital-science/'.$articleSlug.'/'.$imageName.'.png';
-        $image->setAttributeNS('http://www.w3.org/1999/xlink', 'href', $imagePngPath);
-        array_push($imagesArrayXml, $imageName);
-      }
-      $dom->saveXML();
-      // $dom->save($articleXmlPngPath);
-      $dom->save($articlePath.'/'.$articleName.'PNG.xml');
-      chmod_recursive($articlePath, true);
-
-
-      // Check for existing xml file
-      // $articleXmlArchivePath = $articlePath.'/'.$articleName.'.xml';
-      // $articleXmlFiles = glob($articlePath.'/*.xml');
-      // $articleXmlFile  = $articleXmlFiles[0];
-
-      // $articleXml = $articleXmlPng;
-      $articleXml = $articleName.'PNG.xml';
-
-
-
-      add_flash_notice( __('XML file: '.$articleXmlPngUrl), 'info', true );
-      // if ($articleXmlArchivePath === $articleXmlFile) {
-      //   add_flash_notice( __('XML file exists: '.$articleXml), 'info', true );
-      // } else {
-      //   add_flash_notice( __('XML file is missed.'), 'error', true );
-      // }
+    // Check for existing xml file
+    // $articleXmlArchivePath = $articlePath.'/'.$articleName.'.xml';
+    // $articleXmlFiles = glob($articlePath.'/*.xml');
+    // $articleXmlFile  = $articleXmlFiles[0];
+    // if ($articleXmlArchivePath === $articleXmlFile) {
+    //   add_flash_notice( __('XML file exists: '.$articleXml), 'info', true );
     // } else {
-    //   $articleXml = $articleName.'PNG.xml';
-    //   add_flash_notice( __('XML file not changed: '.$articleXmlPngUrl), 'info', true );
+    //   add_flash_notice( __('XML file is missed.'), 'error', true );
     // }
 
   	// Parse XML

@@ -189,7 +189,7 @@ body {
   	background-color: #FFFFFF;
   	box-shadow: 0 16px 24px 2px rgba(0,0,0,0.14), 0 6px 30px 5px rgba(0,0,0,0.12), 0 8px 10px 0 rgba(0,0,0,0.2);
   	z-index: 999;
-	transition: all 0.3s ease;	
+	transition: all 0.3s ease;
 	padding: 10px 0 0 20px;
 }
 
@@ -197,19 +197,19 @@ body {
 	position: fixed;
 	height: 100vh;
 	right: -280px;
-	transition: all 0.3s ease;	
+	transition: all 0.3s ease;
 	z-index: 999;
-	padding: 10px 0 0 20px;	
+	padding: 10px 0 0 20px;
 }
 
 #navbarHeader.collapsing {
 	position: fixed;
 	height: 100vh !important;
-	right: -280px;	
+	right: -280px;
 	opacity: 1;
-	transition: all 0.3s ease;	
+	transition: all 0.3s ease;
 	z-index: 999;
-	padding: 10px 0 0 20px;	
+	padding: 10px 0 0 20px;
 }
 
 
@@ -330,15 +330,15 @@ body {
 
 .searchHeader-form {
 	margin: 0px auto;
-	width: 675px;	
+	width: 675px;
 	max-width: 90%;
 }
 
 .searchHeader-form-input {
-	height: 48px;	
+	height: 48px;
 	width: 100%;
-	border-radius: 2px;	
-	background-color: #FAFAFA;	
+	border-radius: 2px;
+	background-color: #FAFAFA;
 	box-shadow: 0 0 2px 0 rgba(0,0,0,0.12), 0 2px 2px 0 rgba(0,0,0,0.24);
 	border: 0px;
     background-image: url(../img/search-icon.png);
@@ -346,7 +346,7 @@ body {
     background-position: 12px center;
 	font-size: 18px;
 	padding: 8px 20px 10px 42px;
-}	
+}
 
 
 /* MAIN =================== */
@@ -690,7 +690,7 @@ main {
 @media (max-width: 767px) {
 	.cardArticle-modal {
 		height: calc(100vh - 100px);
-	}	
+	}
 }
 
 .cardAbstract {
@@ -1138,7 +1138,7 @@ padding: 20px 10px;
   height: 120px;
   padding: 40px;
 	background-color: rgba(0,132,97,1);
-  color: rgba(255,255,255,1);	
+  color: rgba(255,255,255,1);
 }
 
 .siteFooter-title {
@@ -1188,7 +1188,7 @@ padding: 20px 10px;
 @media (max-width: 920px) {
 
 .siteFooter {
-	height: auto;	
+	height: auto;
   position: relative;
   padding: 30px;
   margin-bottom: 10px;
@@ -1217,7 +1217,7 @@ padding: 20px 10px;
 .siteFooter-menu-item {
 	width: 100%;
 }
-}	
+}
 
 
 /* Modal =================== */
@@ -1322,7 +1322,7 @@ padding: 20px 10px;
   right: -210px;
 	background-image: url(../img/slide-next.png);
 	background-position: center;
-	background-repeat: no-repeat;	
+	background-repeat: no-repeat;
 }
 
 .slick-prev:hover,
@@ -1358,6 +1358,11 @@ padding: 20px 10px;
   margin: 0;
 }
 
+
+/* Add class for remove bug for one slide */
+.full-width {
+  width: 100% !important;
+}
 
 /* Additions =================== */
 .searchwp-highlight {
@@ -1576,7 +1581,7 @@ body.page-template-page-cog9 {
 .cardArticle-counters {
 	display: flex;
 }
-	
+
 .altmetric-embed {
 	width: 200px;
 	float: left;

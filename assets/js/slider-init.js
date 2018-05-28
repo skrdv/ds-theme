@@ -5,4 +5,12 @@ jQuery('.slickSlider').slick({
   dots: true,
   infinite: false,
   speed: 300
-});   
+});
+
+if(jQuery('.slick-arrow').length){
+	jQuery('.slick-track').addClass('TEST');
+  jQuery('.slick-slide').addClass('TEST');
+} else {
+  jQuery('.slick-track').addClass('full-width');
+  jQuery('.slick-slide').addClass('full-width');
+}
