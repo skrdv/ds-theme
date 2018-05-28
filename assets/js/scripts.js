@@ -1,7 +1,8 @@
 (function($) {
 
 $(document).ready(function() {
-  // Custom
+
+  // Custom sticky
   var stickyToggle = function(sticky, stickyWrapper, scrollElement) {
     var stickyHeight = sticky.outerHeight();
     var stickyTop = stickyWrapper.offset().top;
@@ -30,6 +31,24 @@ $(document).ready(function() {
     // On page load
     stickyToggle(sticky, stickyWrapper, $(window));
   });
+
+  $('.slickSlider').slick({
+    infinite: true,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    dots: true,
+    infinite: false,
+    speed: 300
+  });
+
+  if($('.slick-arrow').length){
+  	$('.slick-track').addClass('normal-width');
+    $('.slick-slide').addClass('normal-width');
+  } else {
+    $('.slick-track').addClass('full-width');
+    $('.slick-slide').addClass('full-width');
+  }
+
 });
 
 
