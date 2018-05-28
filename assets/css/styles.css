@@ -1295,6 +1295,10 @@ padding: 20px 10px;
   margin: 30px;
 }
 
+.slick-slide {
+  width: 740px;
+}
+
 .slick-prev,
 .slick-next {
   width: 160px;

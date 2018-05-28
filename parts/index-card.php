@@ -2,7 +2,7 @@
 
 <div class="cardArticle">
 	<div class="cardArticle-body">
-		<div class="cardArticle-date"><?php the_date(); ?></div>
+		<div class="cardArticle-date"><?php the_field('article-date'); ?></div>
 		<a class="cardArticle-title" data-toggle="modal" data-slide="<?php echo $numpost; ?>" data-target="#exampleModalCenter">
 			<?php the_title(); ?>
 		</a>

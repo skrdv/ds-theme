@@ -3,8 +3,8 @@
 		<a href="/">
     		<img src="<?php echo get_template_directory_uri(); ?>/assets/img/logo-footer.png" alt="Microbiology Society">
 		</a>
-	</div>		
-	
+	</div>
+
 	<div class="container">
 		<div class="siteFooter-title">About Us</div>
     	<ul class="siteFooter-menu">
@@ -15,45 +15,35 @@
   		</ul>
 	</div><!-- container -->
 </footer>
-  
+
 </div><!-- site-wrapper -->
-
-
-
-
-
-<script>
- jQuery('a[data-slide]').click(function(e) {
-   var slideno = jQuery(this).data('slide');
-   jQuery('.slickSlider').slick('slickGoTo', slideno);
- });	
-</script>	
-
 
 <?php wp_reset_postdata(); ?>
 
 <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
-		<div class="slickSlider">
-			<?php if (! is_single()): ?>
-				<?php if ( have_posts() ): ?>
-					<?php while (have_posts() ): the_post();?>
-					<?php  get_template_part('parts/slider','item'); ?>
-					<?php endwhile; ?>
-				<?php endif; ?>
-				<?php wp_reset_postdata(); ?>
-			<?php else: ?>
-				<?php $args = array('posts_per_page' => 4); ?>
-					<?php $query = new WP_Query( $args ); ?>
-					<?php if ( $query->have_posts() ): ?>
-					<?php while ( $query->have_posts() ): $query->the_post();?>
-						<?php  get_template_part('parts/slider','item'); ?>
-					<?php endwhile; ?>
-					<?php endif; ?>
-					<?php wp_reset_postdata(); ?>
-			<?php endif; ?>
-		</div>		
+			<div class="slickSlider">
+				<?php
+				if (! is_single()):
+					if ( have_posts() ):
+						while (have_posts() ): the_post();
+							get_template_part('parts/slider','item');
+						endwhile;
+					endif;
+					wp_reset_postdata();
+				else:
+					$args = array('posts_per_page' => 4);
+						$query = new WP_Query( $args );
+						if ( $query->have_posts() ):
+							while ( $query->have_posts() ): $query->the_post();
+								get_template_part('parts/slider','item');
+							endwhile;
+						endif;
+					wp_reset_postdata();
+				endif;
+				?>
+			</div>
     </div>
   </div>
 </div>
