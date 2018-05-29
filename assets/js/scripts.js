@@ -1,6 +1,35 @@
 (function($) {
 
+function menuHomeTabs() {
+
+  if($('body').hasClass('home')){
+
+    $('.menu-home-tabs a').on('click', function(e){
+      e.preventDefault();
+
+      var linkName, tabClass, paneClass;
+
+      linkName = $(this).attr('class');
+      tabClass = '.tab-link.'+linkName;
+      paneClass = '.tab-pane.'+linkName;
+      console.log(linkName);
+
+      $('.startTabs-item a').removeClass('active');
+      $(tabClass).addClass('active');
+
+      $('.tab-content>div').removeClass('active');
+      $(paneClass).addClass('active');
+
+    });
+
+  }
+
+}
+
+
 $(document).ready(function() {
+
+  menuHomeTabs();
 
   $('.slickSlider').slick({
     infinite: false,
@@ -10,6 +39,8 @@ $(document).ready(function() {
     speed: 300,
     variableWidth: true,
   });
+
+
 
   // $('a[data-slide]').click(function(e) {
   //   var slideno = $(this).data('slide');

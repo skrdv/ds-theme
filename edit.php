@@ -13,7 +13,7 @@ $userEmail = $userData->data->user_email;
 // echo $userEmail;
 
 // Get Post data
-$postID = '333';
+$postID = '987';
 // $postID = $post->ID;
 $post = get_post($postID);
 $articleTitle = $post->post_title;
@@ -99,7 +99,7 @@ $articleXml = $articleName.'.xml';
       <div class="form-group row">
         <label for="postId" class="col-sm-2 col-form-label">Post ID</label>
         <div class="col-sm-10">
-          <input type="text" readonly="" class="form-control" id="postId" value="<?php echo $postID; ?>">
+          <input type="text" class="form-control" id="postId" value="<?php echo $postID; ?>">
         </div>
       </div>
       <div class="form-group row">

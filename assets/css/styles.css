@@ -97,7 +97,9 @@ body {
   font-family: 'Roboto', sans-serif;
 }
 
-
+body.admin-bar #navbarHeader.collapse.show {
+  top: 32px;
+}
 
 /* Buttons =================== */
 .btn {
