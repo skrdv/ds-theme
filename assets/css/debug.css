@@ -1,26 +1,4 @@
-.more-like {
-  background-color: #F2F2F2;
-}
 
-.more-like h3 {
-  padding-left: 20px;
-  padding-top: 15px;
-  font-size: 20px;
-}
-
-.more-like .container {
-  width: 100%;
-  max-width: 100%;
-  display: flex;
-}
-
-.more-like .item {
-  padding-right: 15px;
-}
-
-.more-like .item:last-child {
-  padding-right: 0;
-}
 
 
 .debug {padding: 20px;}

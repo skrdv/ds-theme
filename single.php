@@ -40,25 +40,10 @@ if (isset($wp_query->query_vars['template'])) {
 		'posts_per_page' => '4'
 	) );
 	?>
-	<div class="container test">
+	<div class="container">
 		<?php foreach( $moreLikeThis as $post ){ ?>
       <div class="item">
-        <div class="cardArticle">
-  				<div class="cardArticle-body">
-  					<div class="cardArticle-date">
-              <?php the_field('article-date', $post->ID); ?>
-            </div>
-  					<a class="cardArticle-title" data-toggle="modal" data-slide="" data-target="#exampleModalCenter">
-  						<?php echo esc_html( $post->post_title ); ?>
-  					</a>
-  					<div class="cardArticle-persons">
-  						<?php the_field('article-authors', $post->ID); ?>
-            </div>
-  					<a class="cardArticle-counts">
-  						<img src="http://ds.skrdv.com/wp-content/themes/ds-theme/assets/img/counts.png">
-  					</a>
-  				</div>
-  			</div>
+        <?php get_template_part('parts/index','card'); ?>
       </div>
 		<?php } ?>
 	</div>

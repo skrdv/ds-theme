@@ -1138,7 +1138,49 @@ padding: 20px 10px;
 
 
 
+/* More Like This ==================== */
+.more-like {
+  background-color: #F2F2F2;
+}
 
+.more-like h3 {
+  padding-left: 20px;
+  padding-top: 15px;
+  font-size: 20px;
+}
+
+.more-like .container {
+  width: 100%;
+  max-width: 100%;
+  display: flex;
+}
+
+.more-like .item {
+  width: 25%;
+  padding-right: 15px;
+  margin-bottom: 30px;
+}
+
+.more-like .item:last-child {
+  padding-right: 0;
+}
+
+.more-like .item .cardArticle {
+  height: 100%;
+  margin-bottom: 0;
+  position: relative;
+}
+
+.more-like .item .cardArticle-persons {
+  margin-bottom: 30px;
+}
+
+.more-like .item .cardArticle-counters {
+  height: 20px;
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+}
 
 
 
