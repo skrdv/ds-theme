@@ -5,33 +5,37 @@
 ?>
 
 <?php
-
 if (isset($wp_query->query_vars['article'])) {
 	$postID = $wp_query->query_vars['article'];
-} else {
-  $postID = '987';
+	$postPermalink = get_permalink($postID);
+	$articleTitle = get_the_title($postID);
+	$articleArstract = get_field('article-abstract', $postID);
 }
-
-$articleArstract = get_field('article-abstract', $postID);
-
 ?>
 
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html <?php language_attributes(); ?>>
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>Print Abstract <?php echo $postID; ?></title>
-  <link href="<?php echo get_template_directory_uri(); ?>/assets/css/styles.css" rel="stylesheet">
-  <link href="<?php echo get_template_directory_uri(); ?>/assets/css/print.css" rel="stylesheet">
+	<meta charset="<?php bloginfo( 'charset' ); ?>">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Print Abstract <?php echo $articleTitle; ?></title>
+  <?php wp_head(); ?>
+	<script type="text/javascript">
+		window.print();
+	</script>
 </head>
 <body>
 
   <div class="print">
-    <h1 class="title">Abstract</h1>
+    <h1 class="title"><?php echo $articleTitle; ?></h1>
+    <h3 class="subtitle">Abstract</h3>
     <div class="content">
       <?php echo $articleArstract; ?>
     </div>
+		<div class="link">
+			<?php echo $postPermalink; ?>
+		</div>
   </div>
 
 <?php wp_footer(); ?>
