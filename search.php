@@ -18,69 +18,20 @@
 				</div>
 			</div>
 		</div>
-      </div>
-
-
+  </div>
 	<div class="search-results">
 		<div class="container">
 			<h2 class="pane-title">Search Results:</h2>
-	<?php $numpost = 1; ?>
-	<?php if (have_posts()) : ?>
-		<?php  while (have_posts()) : the_post(); ?>
-
-			<?php get_template_part('parts/index','card'); ?>
-
-			<?php /*
-			<div class="cardArticle">
-				<div class="cardArticle-body">
-					<div class="cardArticle-date"><?php the_date(); ?></div>
-					<a class="cardArticle-title" data-toggle="modal" data-slide="<?php echo $numpost; ?>" data-target="#exampleModalCenter"><?php the_title(); ?></a>
-					<div class="cardArticle-persons"><?php the_field('article-authors'); ?></div>
-					<div><?php the_excerpt(); ?></div>
-					  <a class="cardArticle-counts">
-  						<img src="http://ds.skrdv.com/wp-content/themes/ds-theme/assets/img/counts.png">
-  					</a>
-				</div>
-			</div>
-			*/ ?>
-
-			<?php $numpost++ ; ?>
-		<?php endwhile; ?>
-	<?php else: ?>
-		<h1>Sorry, nothing was found, please try again</h1>
-	<?php endif; ?>
-	<?php //wp_reset_postdata(); ?>
-
-			</div><!-- container -->
+			<?php global $numpost ; ?>
+			<?php if (have_posts()) : ?>
+				<?php  while (have_posts()) : the_post(); ?>
+					<?php get_template_part('parts/index','card'); ?>
+				<?php endwhile; ?>
+			<?php else: ?>
+				<h1>Sorry, nothing was found, please try again</h1>
+			<?php endif; ?>
+		</div><!-- container -->
 	</div><!-- search results -->
 </main>
-
-<?php /*
-<script>
- jQuery('a[data-slide]').click(function(e) {
-   var slideno = jQuery(this).data('slide');
-   jQuery('.slickSlider').slick('slickGoTo', slideno);
- });
-</script>
-
-
-<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content">
-		<div class="slickSlider">
-		<?php if (have_posts()) : ?>
-		<?php  while (have_posts()) : the_post(); ?>
-				<?php  get_template_part('parts/slider','item'); ?>
-		<?php endwhile; ?>
-	<?php endif; ?>
-		</div>
-    </div>
-  </div>
-</div>
-*/ ?>
-
-
-
-
 
 <?php get_footer();
