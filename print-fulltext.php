@@ -22,7 +22,7 @@ if (isset($wp_query->query_vars['article'])) {
   <title>Print Full Text <?php echo $articleTitle; ?></title>
 	<?php wp_head(); ?>
 	<script type="text/javascript">
-		// window.print();
+		window.print();
 	</script>
 </head>
 <body>

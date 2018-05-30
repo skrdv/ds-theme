@@ -48,6 +48,16 @@
   </header>
 
 	<div class="debug">
+
+    <?php
+
+    $postType = get_post_type();
+    echo $postType;
+
+    ?>
+
+
+
 		<?php
 
     // Get folders

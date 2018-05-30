@@ -134,7 +134,6 @@ function add_flash_notice( $notice = "", $type = "warning", $dismissible = true 
     update_option("my_flash_notices", $notices );
 }
 
-
 // Function executed when the 'admin_notices' action is called, here we check if there are notices on
 // our database and display them, after that, we remove the option to prevent notices being displayed forever.
 function display_flash_notices() {
@@ -177,6 +176,9 @@ add_action('add_attachment', function ($attachmentId) {
 // Update post
 function my_acf_save_post( $post_id ) {
 
+$postType = get_post_type();
+if($postType == 'post'):
+
 	// Get folders
   WP_Filesystem();
   $rootPath		 = get_home_path();
@@ -194,10 +196,6 @@ function my_acf_save_post( $post_id ) {
 	$articleAuthors  = get_field('article-authors', $post_id);
 	$articleAbstract = get_field('article-abstract', $post_id);
   $articleBody     = get_field('article-body', $post_id);
-
-
-
-
 
 	// Get archive
 	if (!$articleZip) {
@@ -354,21 +352,11 @@ function my_acf_save_post( $post_id ) {
 
       // Get Article Meta
       $articleId = $xmlFile->front->{'article-meta'}->{'article-id'};
-      // $articleDoi = $articleId[1];
       $articleDoiArray = array();
-
       foreach ($articleId as $value) {
-        // if ($key === 0) {
           $articleDoi = $value.'';
-          // $articleDoi = $value;
-          // $articleDoi = $value;
-          // array_push($articleDoiArray, $value);
-        // }
       }
-      // $articleDoiList = implode(', ', $value);
-      // $articleDoi = $articleDoiArray[0];
-      // $articleDoi = json_decode($articleDoiArray[1]);
-      // $articleDoi = json_encode($articleDoiArray[0]);
+
 
       // Get Article Authors
       if (!$articleAuthors) {
@@ -462,46 +450,11 @@ function my_acf_save_post( $post_id ) {
 
 	}
 
+endif;
 
 }
 add_action('acf/save_post', 'my_acf_save_post', 20);
 
-
-
-// Validate
-// function my_acf_validate_save_post() {
-//
-// 	// check if user is an administrator
-// 	if( current_user_can('manage_options') ) {
-// 		// clear all errors
-// 		acf_reset_validation_errors();
-// 	}
-//
-//   $articleZip      = get_field('article-zip');
-// 	$articleXml	     = get_field('article-xml');
-// 	$articlePdf	     = get_field('article-pdf');
-// 	$articleDate     = get_field('article-date');
-//   $articleDoi      = get_field('article-doi');
-// 	$articleAuthors  = get_field('article-authors');
-// 	$articleArstract = get_field('article-abstract');
-//   $articleBody     = get_field('article-body');
-//
-//   display_flash_notices();
-//
-//   if (!$articleZip) {
-//     add_flash_notice( __("Archive field is empty. All field cleared."), "error", true );
-//   } else {
-//     add_flash_notice( __("Archive unpacked. All fields updated."), "info", true );
-//   }
-//
-//   if (!$articlePdf) {
-//     add_flash_notice( __("PDF is missing."), "error", true );
-//   } else {
-//     add_flash_notice( __("PDF file: ".$articlePdf), "info", true );
-//   }
-//
-// }
-// add_action('acf/validate_save_post', 'my_acf_validate_save_post', 10, 0);
 
 
 
