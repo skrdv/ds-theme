@@ -80,15 +80,11 @@ if (isset($wp_query->query_vars['article'])) {
 	var documentURL = '<?php echo $xmlUrl; ?>';
 
 	jQuery(function() {
-
 		var app = new window.Lens({
 			document_url: qs.url ? decodeURIComponent(qs.url) : documentURL
 		});
-
 		app.start();
-
 		window.app = app;
-
 	});
 	</script>
 
@@ -99,6 +95,13 @@ if (isset($wp_query->query_vars['article'])) {
 	.lens-article .content-node.cover .doi {
 		display: inline-block;
 		margin-right: 30px;
+	}
+	.menu-bar .context-toggles .print {
+		margin: 0;
+	}
+	.panel.print.resource-view .surface.print {
+		margin-top: 0;
+		padding-top: 0;
 	}
 	</style>
 	<script type="text/javascript">
@@ -146,24 +149,6 @@ if (isset($wp_query->query_vars['article'])) {
 </head>
 
 <body <?php body_class('site'); ?>>
-  <h1><?php the_title(); ?></h1>
-
-  <header class="site-header">
-    <nav class="navbar">
-      <div class="container">
-        <div class="navbar-brand">
-          <a class="navbar-item" href="<?php echo esc_url(home_url('/')); ?>" rel="home">
-            <h1 class="title is-5"><?php echo get_bloginfo('name'); ?></h1>
-          </a>
-          <div class="navbar-burger burger" data-target="navbar">
-            <span></span>
-            <span></span>
-            <span></span>
-          </div>
-        </div>
-      </div>
-    </nav>
-  </header>
 
 	<section class="site-page">
    	<div class="container">
