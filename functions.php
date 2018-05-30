@@ -238,54 +238,25 @@ if($postType == 'post'):
 
     // Check unzip archive
     if ($articleUnzip) {
-      add_flash_notice( __('ZIP file: '.$articleFile), 'info', true );
+      add_flash_notice( __('Unzip success. <br>'.$uploadPath.'/'.$articleFile), 'info', true );
     } else {
       add_flash_notice( __('Unzip error!'), 'error', true );
     }
 
     // Check PDF file
     $articlePdf = $articleName.'.pdf';
-    add_flash_notice( __('PDF file: '.$articleUrl.'/'.$articlePdf), 'info', true );
+    // add_flash_notice( __('PDF file: '.$articleUrl.'/'.$articlePdf), 'info', true );
 
     // Check for existing xml file
-    // $articlePdfArchivePath = $articlePath.'/'.$articleName.'.pdf';
-    // $articlePdfFiles = glob($articlePath.'/*.pdf');
-    // $articlePdfFile  = $articlePdfFiles[0];
-    // $articlePdfUrl = $articleUrl.'/'.$articleName.'.pdf';
-    // if ($articlePdfArchivePath === $articlePdfFile) {
-    //  add_flash_notice( __('PDF file exists: '.$articlePdfUrl), 'info', true );
-    // } else {
-    //  add_flash_notice( __('PDF file is missed.'), 'error', true );
-    // }
-
-    // Check ImageMagick
-    // if (extension_loaded('imagick')) {
-    //   add_flash_notice( __('ImageMagick Loaded.'), 'info', true );
-    // } else {
-    //   add_flash_notice( __('Extension ImageMagick not found by extension_loaded.'), 'error', true );
-    // }
-
-    // Convert images to png
-    $imagesTif = glob($articlePath.'/*.tif');
-    if ($imagesTif) {
-      $imagesArrayFiles = array();
-      foreach($imagesTif as $image) {
-        $imageName = str_replace($articlePath.'/', '', substr($image, 0, -4));
-        array_push($imagesArrayFiles, $imageName);
-        $im = new imagick($image);
-        $im->writeImage($articlePath.'/'.$imageName.'.png');
-      }
+    $articlePdfArchivePath = $articlePath.'/'.$articleName.'.pdf';
+    $articlePdfFiles = glob($articlePath.'/*.pdf');
+    $articlePdfFile  = $articlePdfFiles[0];
+    $articlePdfUrl = $articleUrl.'/'.$articleName.'.pdf';
+    if ($articlePdfArchivePath === $articlePdfFile) {
+     add_flash_notice( __('PDF file exists. <br> '.$articlePdfUrl), 'info', true );
+    } else {
+     add_flash_notice( __('PDF file is missed.'), 'error', true );
     }
-
-    // Check images for exists
-    // if ($imagesArrayXml === $imagesArrayFiles) {
-    //   add_flash_notice( __('All images in archive.'), 'info', true );
-    // } elseif(!$imagesArrayXml) {
-    //   add_flash_notice( __('No images in archive.'), 'error', true );
-    // } else {
-    //   add_flash_notice( __('Not enough images in archive.'), 'error', true );
-    // }
-
 
     // Check XML file
     $articleXml = $articleName.'.xml';
@@ -311,17 +282,45 @@ if($postType == 'post'):
     $dom->save($articlePath.'/'.$articleName.'PNG.xml');
     chmod_recursive($articlePath, true);
     $articleXml = $articleName.'PNG.xml';
-    add_flash_notice( __('XML file: '.$articleXmlPngUrl), 'info', true );
+    // add_flash_notice( __('XML file: '.$articleXmlPngUrl), 'info', true );
 
     // Check for existing xml file
-    // $articleXmlArchivePath = $articlePath.'/'.$articleName.'.xml';
-    // $articleXmlFiles = glob($articlePath.'/*.xml');
-    // $articleXmlFile  = $articleXmlFiles[0];
-    // if ($articleXmlArchivePath === $articleXmlFile) {
-    //   add_flash_notice( __('XML file exists: '.$articleXml), 'info', true );
+    $articleXmlArchivePath = $articlePath.'/'.$articleName.'.xml';
+    $articleXmlFiles = glob($articlePath.'/*.xml');
+    $articleXmlFile  = $articleXmlFiles[0];
+    if ($articleXmlArchivePath === $articleXmlFile) {
+      add_flash_notice( __('XML file exists. <br>'.$articleXmlPngUrl), 'info', true );
+    } else {
+      add_flash_notice( __('XML file is missed.'), 'error', true );
+    }
+
+		// Check ImageMagick
+    // if (extension_loaded('imagick')) {
+    //   add_flash_notice( __('ImageMagick Loaded.'), 'info', true );
     // } else {
-    //   add_flash_notice( __('XML file is missed.'), 'error', true );
+    //   add_flash_notice( __('Extension ImageMagick not found by extension_loaded.'), 'error', true );
     // }
+
+    // Convert images to png
+    $imagesTif = glob($articlePath.'/*.tif');
+    if ($imagesTif) {
+      $imagesArrayFiles = array();
+      foreach($imagesTif as $image) {
+        $imageName = str_replace($articlePath.'/', '', substr($image, 0, -4));
+        array_push($imagesArrayFiles, $imageName);
+        $im = new imagick($image);
+        $im->writeImage($articlePath.'/'.$imageName.'.png');
+      }
+    }
+
+		// Check images for exists
+		if ($imagesArrayXml === $imagesArrayFiles) {
+		  add_flash_notice( __('All images in archive exists.'), 'info', true );
+		} elseif(!$imagesArrayXml) {
+		  add_flash_notice( __('No images in archive.'), 'error', true );
+		} else {
+		  add_flash_notice( __('Not enough images in archive.'), 'error', true );
+		}
 
   	// Parse XML
     if ($articleXml) {
