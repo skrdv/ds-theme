@@ -33,6 +33,7 @@ if (isset($wp_query->query_vars['template'])) {
 
 <div class="more-like">
 	<h3>More like this ...</h3>
+
 	<?php
 	$last_posts = new WP_Query;
 	$moreLikeThis = $last_posts->query( array(
@@ -47,8 +48,13 @@ if (isset($wp_query->query_vars['template'])) {
       </div>
 		<?php } ?>
 	</div>
+
 </div>
+
+
+
 <?php else: ?>
 <?php get_template_part('lens'); ?>
 <?php endif; ?>
+
 <?php get_footer(); ?>

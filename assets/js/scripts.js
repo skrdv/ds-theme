@@ -31,13 +31,21 @@ $(document).ready(function() {
 
   menuHomeTabs();
 
+
+
   $('.slickSlider').slick({
     infinite: false,
-    slidesToShow: 5,
+    slidesToShow: 1,
     slidesToScroll: 1,
     dots: true,
     speed: 300,
     variableWidth: true,
+  });
+
+  $('a[data-slide]').click(function(e) {
+    var slideno = jQuery(this).data('slide');
+    $('.slickSlider').slick('slickGoTo', parseInt(slideno));
+    console.log(slideno);
   });
 
 

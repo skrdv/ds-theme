@@ -4,61 +4,98 @@
  */
 ?>
 
+<?php get_header(); ?>
 
 
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title><?php the_title(); ?></title>
+<div class="debug">
 
-  <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,400italic,600italic' rel="stylesheet">
-  <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+<style media="screen">
+  .debug {
+    background-color: grey;
+  }
+  h3 {
+      background: #fff;
+      color: black;
+      font-size: 36px;
+      line-height: 100px;
+      margin: 10px;
+      padding: 2%;
+      position: relative;
+      text-align: center;
+  }
+  .action{
+    display:block;
+    margin:100px auto;
+    width:100%;
+    text-align:center;
+  }
+  .action a {
+    display:inline-block;
+    padding:5px 10px;
+    background:#f30;
+    color:#fff;
+    text-decoration:none;
+  }
+  .action a:hover{
+    background:#000;
+  }
+</style>
 
-  <link href="<?php echo get_template_directory_uri(); ?>/assets/css/bootstrap.min.css" rel="stylesheet">
-  <link href="<?php echo get_template_directory_uri(); ?>/assets/css/lens.css" rel="stylesheet">
-  <link href="<?php echo get_template_directory_uri(); ?>/assets/css/styles.css" rel="stylesheet">
-  <link href="<?php echo get_template_directory_uri(); ?>/assets/css/debug.css" rel="stylesheet">
+<div class="main">
+  <div class="slider slider-for">
+    <div><h3>1</h3></div>
+    <div><h3>2</h3></div>
+    <div><h3>3</h3></div>
+    <div><h3>4</h3></div>
+    <div><h3>5</h3></div>
+  </div>
+  <div class="slider slider-nav">
+    <div><h3>1</h3></div>
+    <div><h3>2</h3></div>
+    <div><h3>3</h3></div>
+    <div><h3>4</h3></div>
+    <div><h3>5</h3></div>
+  </div>
+  <div class="action">
+    <a href="#" data-slide="3">go to slide 3</a>
+    <a href="#" data-slide="4">go to slide 4</a>
+    <a href="#" data-slide="5">go to slide 5</a>
+  </div>
+</div>
 
-  <script src="<?php echo get_template_directory_uri(); ?>/assets/js/jquery.min.js"></script>
-  <script src="<?php echo get_template_directory_uri(); ?>/assets/js/bootstrap.min.js"></script>
-  <script src="<?php echo get_template_directory_uri(); ?>/assets/js/scripts.js"></script>
+<script type="text/javascript">
+$('.slider-for').slick({
+   slidesToShow: 1,
+   slidesToScroll: 1,
+   // arrows: true,
+   fade: true,
+   asNavFor: '.slider-nav'
+ });
 
-</head>
-<body>
+ $('.slider-nav').slick({
+   slidesToShow: 3,
+   slidesToScroll: 1,
+   asNavFor: '.slider-for',
+   dots: true,
+   focusOnSelect: true
+ });
 
-  <header>
-    <div class="navbar">
-      <a href="/" class="navbar-brand">
-        <img src="<?php echo get_template_directory_uri(); ?>/assets/img/logo-header.png" alt="Microbiology Society">
-      </a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarHeader" aria-controls="navbarHeader" aria-expanded="false" aria-label="Toggle navigation">
-        <span></span>
-        <span></span>
-        <span></span>
-      </button>
-    </div>
-    <div class="bread">
-      <div class="item">Home</div>
-      <div class="item">Journal of Medical Microbiology</div>
-      <div class="item">Volume 59, Issue 11</div>
-      <div class="item active">Article</div>
-    </div>
-  </header>
+ $('a[data-slide]').click(function(e) {
+   e.preventDefault();
+   var slideno = $(this).data('slide');
+   $('.slider-nav').slick('slickGoTo', slideno - 1);
+ });
+</script>
+
+</div>
+
+
 
 	<div class="debug">
 
-    <?php
-
-    $postType = get_post_type();
-    echo $postType;
-
-    ?>
-
-
-
 		<?php
+
+    echo '<br><br><br><br><strong>===================</strong><br>';
 
     // Get folders
   	WP_Filesystem();

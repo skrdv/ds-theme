@@ -1,16 +1,9 @@
 <?php
 /**
  * The template for displaying search results pages
- *
- * @link https://developer.wordpress.org/themes/basics/template-hierarchy/#search-result
- *
- * @package WordPress
- * @subpackage Twenty_Seventeen
- * @since 1.0
- * @version 1.0
  */
-
-get_header(); ?>
+?>
+<?php get_header(); ?>
 
 <main role="main">
 	<div class="searchHeader">
@@ -24,19 +17,19 @@ get_header(); ?>
         </form>
 				</div>
 			</div>
-		</div>	
+		</div>
       </div>
 
-		
+
 	<div class="search-results">
 		<div class="container">
 			<h2 class="pane-title">Search Results:</h2>
 	<?php $numpost = 1; ?>
 	<?php if (have_posts()) : ?>
 		<?php  while (have_posts()) : the_post(); ?>
-			
+
 			<?php get_template_part('parts/index','card'); ?>
-				
+
 			<?php /*
 			<div class="cardArticle">
 				<div class="cardArticle-body">
@@ -50,15 +43,15 @@ get_header(); ?>
 				</div>
 			</div>
 			*/ ?>
-	
+
 			<?php $numpost++ ; ?>
 		<?php endwhile; ?>
 	<?php else: ?>
-		<h1>Sorry, nothing was found, please try again</h1>	
+		<h1>Sorry, nothing was found, please try again</h1>
 	<?php endif; ?>
 	<?php //wp_reset_postdata(); ?>
 
-			</div><!-- container --> 
+			</div><!-- container -->
 	</div><!-- search results -->
 </main>
 
@@ -67,8 +60,8 @@ get_header(); ?>
  jQuery('a[data-slide]').click(function(e) {
    var slideno = jQuery(this).data('slide');
    jQuery('.slickSlider').slick('slickGoTo', slideno);
- });	
-</script>	
+ });
+</script>
 
 
 <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
@@ -79,15 +72,15 @@ get_header(); ?>
 		<?php  while (have_posts()) : the_post(); ?>
 				<?php  get_template_part('parts/slider','item'); ?>
 		<?php endwhile; ?>
-	<?php endif; ?>		
-		</div>		
+	<?php endif; ?>
+		</div>
     </div>
   </div>
 </div>
-*/ ?>			
-			
+*/ ?>
 
-		
+
+
 
 
 <?php get_footer();
