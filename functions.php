@@ -160,16 +160,16 @@ add_action( 'admin_notices', 'display_flash_notices', 12 );
 
 
 // Prevent file duplicates on upload
-add_action('add_attachment', function ($attachmentId) {
-    $attachment = get_post($attachmentId);
-    $path = get_attached_file($attachmentId);
-
-    $filename = sanitize_file_name($filename);
-    $filename = pathinfo($filename, PATHINFO_FILENAME) . '_' . mt_rand() . (pathinfo($filename, PATHINFO_EXTENSION) ? '.' . pathinfo($filename, PATHINFO_EXTENSION) : '');
-
-    // в $path у Вас полный путь к файлу, а в $attachment - объект WP_Post вашего аттачмента
-    // ... здесь Ваша логика для того, чтоб переименовать файл.
-});
+// add_action('add_attachment', function ($attachmentId) {
+//     $attachment = get_post($attachmentId);
+//     $path = get_attached_file($attachmentId);
+//
+//     $filename = sanitize_file_name($filename);
+//     $filename = pathinfo($filename, PATHINFO_FILENAME) . '_' . mt_rand() . (pathinfo($filename, PATHINFO_EXTENSION) ? '.' . pathinfo($filename, PATHINFO_EXTENSION) : '');
+//
+//     // в $path у Вас полный путь к файлу, а в $attachment - объект WP_Post вашего аттачмента
+//     // ... здесь Ваша логика для того, чтоб переименовать файл.
+// });
 
 
 
@@ -217,6 +217,7 @@ if($postType == 'post'):
   } else {
 
     $articleFile    = $articleZip['filename'];
+		$articleZipname = $articleZip['filename'];
     $articleName     = str_replace('.', '', substr($articleFile, 0, -4));
     $articleXmlPng   = $articleName.'PNG.xml';
     $articleXmlUrl = $articleUrl.'/'.$articleName.'.xml';
@@ -230,6 +231,10 @@ if($postType == 'post'):
       if(is_file($file))
         unlink($file);
     }
+
+		// Delete zip archive
+		chmod_recursive($uploadPath, true);
+		unlink($uploadPath.'/'.$articleZipname['filename'].'.zip');
 
     // Unzip archive
 		$articleUnzip = unzip_file( $uploadPath.'/'.$articleFile, $articlePath);
@@ -438,7 +443,7 @@ if($postType == 'post'):
       'ID' => $post_id,
       'post_title' => $articleTitle
     ));
-    update_field('debug', $articleXmlPng);
+    update_field('debug', $articleZip['filename']);
     update_field('article-xml', $articleXml);
     update_field('article-pdf', $articlePdf);
     update_field('article-doi', $articleDoi);
