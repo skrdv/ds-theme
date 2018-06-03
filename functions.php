@@ -148,7 +148,7 @@ function display_flash_notices() {
   }
   // Now we reset our options to prevent notices being displayed forever.
   if( ! empty( $notices ) ) {
-    delete_option( "my_flash_notices", array() );
+    //delete_option( "my_flash_notices", array() );
   }
 }
 // We add our display_flash_notices function to the admin_notices
@@ -456,6 +456,7 @@ if($postType == 'post'):
 
 endif;
 
+	delete_article_zip( $post_id );
 }
 add_action('acf/save_post', 'my_acf_save_post', 20);
 
@@ -479,3 +480,27 @@ function article_update_after_creation( $post_id ) {
 }
 
 add_action('cred_save_data','article_update_after_creation',10,2);
+
+
+function delete_article_zip( $post_id ){
+	$post = get_post( $post_id );
+	$attachments = get_children( array( 'post_type'=>'attachment', 'post_parent'=>$post_id ) );
+		if( $attachments ){
+			foreach( $attachments as $attachment ) wp_delete_attachment( $attachment->ID );
+		}
+}
+
+
+// Replace form for protected pages
+add_filter( 'the_password_form', 'custom_password_form' );
+function custom_password_form() {
+global $post;
+$o = '<form action="' . esc_url( site_url( 'wp-login.php?action=postpass', 'login_post' ) ) . '" method="post">
+' . __( "Some custom message." ) . '
+<label for="Login">' . __( "Email:" ) . ' </label><input name="Login" type="text" size="20" readonly="" value="admin" />
+<label for="password">' . __( "Password:" ) . ' </label><input name="post_password" id="password" type="password" size="20" required/>
+<input type="submit" name="Submit" value="' . esc_attr__( "Submit" ) . '" />
+</form>
+';
+return $o;
+}
