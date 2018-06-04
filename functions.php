@@ -517,7 +517,7 @@ add_filter( 'the_password_form', 'custom_password_form' );
 function custom_password_form() {
 global $post;
 $o = '<form action="' . esc_url( site_url( 'wp-login.php?action=postpass', 'login_post' ) ) . '" method="post">
-' . __( "Some custom message." ) . '
+' . __( "" ) . '
 <label for="Login">' . __( "Email:" ) . ' </label><input name="Login" type="text" size="20" readonly="" value="admin" />
 <label for="password">' . __( "Password:" ) . ' </label><input name="post_password" id="password" type="password" size="20" required/>
 <input type="submit" name="Submit" value="' . esc_attr__( "Submit" ) . '" />

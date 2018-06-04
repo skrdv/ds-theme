@@ -1594,8 +1594,12 @@ body.page-template-page-cog9 {
 	background-color: #CFD8DC;
 	padding: 10px 110px;
 	font-size: 18px;
-	margin-left: 0px !important; 
+	margin-left: 0px !important;
 	width: 100%;
+}
+
+.adminHeader-bottombar a:last-child {
+  float: right;
 }
 
 .adminContent {
