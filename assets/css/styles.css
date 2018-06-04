@@ -1669,6 +1669,17 @@ body.page-template-page-cog9 {
 	padding: 0;
 }
 
+.notice.notice-red {
+  color: red !important;
+}
+
+.notice.notice-green {
+  color: green !important;
+}
+
+.notice.notice-done {
+  font-size: 120%;
+}
 
 
 .modal-dialog-centered {

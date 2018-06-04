@@ -232,6 +232,7 @@ if($postType == 'post'):
 			add_flash_notice( 'It is not a valid archive. Article did not created.', 'warning', true );
 			delete_article_zip($post_id);
 			wp_delete_post($post_id);
+			add_flash_notice( __('<span class="notice notice-red notice-done">Upload failed.</span>'), 'error', true );
 		  return;
 		}
 
@@ -249,9 +250,9 @@ if($postType == 'post'):
 
     // Check unzip archive
     if ($articleUnzip) {
-      add_flash_notice( __('Unzip success. <br>'.$uploadPath.'/'.$articleFile), 'info', true );
+      add_flash_notice( __('<span class="notice notice-green">Unzip successful.</span> <br>'.$uploadPath.'/'.$articleFile), 'info', true );
     } else {
-      add_flash_notice( __('Unzip error!'), 'error', true );
+      add_flash_notice( __('<span class="notice notice-red">Unzip error!</span>'), 'error', true );
     }
 
 		// Delete zip archive
@@ -262,9 +263,10 @@ if($postType == 'post'):
 		if (glob($articlePath.'/*.xml')) {
 			// add_flash_notice( glob($articlePath.'/*.xml')[0], 'error', true );
 		} else {
-			add_flash_notice( 'It is not a valid archive. Article did not created.', 'warning', true );
+			add_flash_notice( '<span class="notice notice-red">The archive structure is incorrect. Article is not created.</span>', 'warning', true );
 			delete_article_zip($post_id);
 			wp_delete_post($post_id);
+			add_flash_notice( __('<span class="notice notice-red notice-done">Upload failed.</span>'), 'error', true );
 		  return;
 		}
 
@@ -278,9 +280,9 @@ if($postType == 'post'):
     $articlePdfFile  = $articlePdfFiles[0];
     $articlePdfUrl = $articleUrl.'/'.$articleName.'.pdf';
     if ($articlePdfArchivePath === $articlePdfFile) {
-     add_flash_notice( __('PDF file exists. <br> '.$articlePdfUrl), 'info', true );
+     add_flash_notice( __('<span class="notice notice-green">PDF file found.</span> <br> '.$articlePdfUrl), 'info', true );
     } else {
-     add_flash_notice( __('PDF file is missed.'), 'error', true );
+     add_flash_notice( __('<span class="notice notice-red">PDF file is missing.</span>'), 'error', true );
     }
 
     // Check XML file
@@ -314,9 +316,9 @@ if($postType == 'post'):
     $articleXmlFiles = glob($articlePath.'/*.xml');
     $articleXmlFile  = $articleXmlFiles[0];
     if ($articleXmlArchivePath === $articleXmlFile) {
-      add_flash_notice( __('XML file exists. <br>'.$articleXmlPngUrl), 'info', true );
+      add_flash_notice( __('<span class="notice notice-green">XML file found.</span> <br>'.$articleXmlPngUrl), 'info', true );
     } else {
-      add_flash_notice( __('It is not a valid archive. Article did not created.'), 'error', true );
+      add_flash_notice( __('<span class="notice notice-red">The archive structure is incorrect. Article is not created.</span>'), 'error', true );
 			return;
     }
 
@@ -341,11 +343,11 @@ if($postType == 'post'):
 
 		// Check images for exists
 		if ($imagesArrayXml === $imagesArrayFiles) {
-		  add_flash_notice( __('All images in archive exists.'), 'info', true );
+		  add_flash_notice( __('<span class="notice notice-green">All images in archive exists.</span>'), 'info', true );
 		} elseif(!$imagesArrayXml) {
-		  add_flash_notice( __('No images in archive.'), 'error', true );
+		  add_flash_notice( __('<span class="notice notice-red">No images in the archive.</span>'), 'error', true );
 		} else {
-		  add_flash_notice( __('Not enough images in archive.'), 'error', true );
+		  add_flash_notice( __('<span class="notice notice-red">Not enough images in archive.</span>'), 'error', true );
 		}
 
   	// Parse XML
@@ -440,9 +442,9 @@ if($postType == 'post'):
       // Get XML file
       $dom=new DOMDocument();
       $dom->load($articleXmlUrl);
-      if (!$dom->load($articleXmlUrl)){
-       add_flash_notice( __('Error in XML document.'), 'error', true );
-      }
+      // if (!$dom->load($articleXmlUrl)){
+      //  add_flash_notice( __('<span class="notice notice-red">Error in XML document.</span>'), 'error', true );
+      // }
 
       // Get Article Abstarct
       $abstract = $dom->documentElement->getElementsByTagName('abstract');
@@ -472,6 +474,8 @@ if($postType == 'post'):
     update_field('article-authors', $articleAuthors);
     update_field('article-abstract', $articleAbstract);
     update_field('article-body', $articleBody);
+
+		add_flash_notice( __('<span class="notice notice-green notice-done">Uploaded successfull.</span>'), 'info', true );
 
 	}
 
