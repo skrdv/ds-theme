@@ -225,16 +225,22 @@ if($postType == 'post'):
     $articleXmlPath = $articlePath.'/'.$articleName.'.xml';
     $articleXmlPngPath = $articlePath.'/'.$articleName.'PNG.xml';
 
+		// Check if file is ZIP
+		if (preg_match('/.zip/', $articleFile)) {
+			 // add_flash_notice( 'ZIP archive uploaded!', 'warning', true );
+		} else{
+			add_flash_notice( 'It is not a valid archive. Article did not created.', 'warning', true );
+			delete_article_zip($post_id);
+			wp_delete_post($post_id);
+		  return;
+		}
+
     // Delete all files
     $articleAllFiles = glob($articlePath.'/*');
     foreach($articleAllFiles as $file){
       if(is_file($file))
         unlink($file);
     }
-
-		// Delete zip archive
-		chmod_recursive($uploadPath, true);
-		unlink($uploadPath.'/'.$articleZipname['filename'].'.zip');
 
     // Unzip archive
 		$articleUnzip = unzip_file( $uploadPath.'/'.$articleFile, $articlePath);
@@ -247,6 +253,20 @@ if($postType == 'post'):
     } else {
       add_flash_notice( __('Unzip error!'), 'error', true );
     }
+
+		// Delete zip archive
+		// chmod_recursive($uploadPath, true);
+		// unlink($uploadPath.'/'.$articleZipname['filename'].'.zip');
+
+		// Check for xml file after unzip
+		if (glob($articlePath.'/*.xml')) {
+			// add_flash_notice( glob($articlePath.'/*.xml')[0], 'error', true );
+		} else {
+			add_flash_notice( 'It is not a valid archive. Article did not created.', 'warning', true );
+			delete_article_zip($post_id);
+			wp_delete_post($post_id);
+		  return;
+		}
 
     // Check PDF file
     $articlePdf = $articleName.'.pdf';
@@ -296,7 +316,8 @@ if($postType == 'post'):
     if ($articleXmlArchivePath === $articleXmlFile) {
       add_flash_notice( __('XML file exists. <br>'.$articleXmlPngUrl), 'info', true );
     } else {
-      add_flash_notice( __('XML file is missed.'), 'error', true );
+      add_flash_notice( __('It is not a valid archive. Article did not created.'), 'error', true );
+			return;
     }
 
 		// Check ImageMagick
