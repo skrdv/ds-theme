@@ -229,7 +229,7 @@ if($postType == 'post'):
 		if (preg_match('/.zip/', $articleFile)) {
 			 // add_flash_notice( 'ZIP archive uploaded!', 'warning', true );
 		} else{
-			add_flash_notice( 'It is not a valid archive. Article did not created.', 'warning', true );
+			add_flash_notice( 'The archive structure is incorrect. Article is not created.', 'warning', true );
 			delete_article_zip($post_id);
 			wp_delete_post($post_id);
 			add_flash_notice( __('<span class="notice notice-red notice-done">Upload failed.</span>'), 'error', true );
@@ -347,7 +347,7 @@ if($postType == 'post'):
 		} elseif(!$imagesArrayXml) {
 		  add_flash_notice( __('<span class="notice notice-red">No images in the archive.</span>'), 'error', true );
 		} else {
-		  add_flash_notice( __('<span class="notice notice-red">Not enough images in archive.</span>'), 'error', true );
+		  add_flash_notice( __('<span class="notice notice-red">Some images are missing in the archive.</span>'), 'error', true );
 		}
 
   	// Parse XML
@@ -475,7 +475,7 @@ if($postType == 'post'):
     update_field('article-abstract', $articleAbstract);
     update_field('article-body', $articleBody);
 
-		add_flash_notice( __('<span class="notice notice-green notice-done">Uploaded successfull.</span>'), 'info', true );
+		add_flash_notice( __('<span class="notice notice-green notice-done">Uploaded successfully.</span>'), 'info', true );
 
 	}
 
