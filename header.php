@@ -26,12 +26,12 @@
 
   <div class="navbar">
     <a href="/" class="navbar-brand">
-      <img src="<?php echo get_template_directory_uri(); ?>/assets/img/logo-header.png" alt="Microbiology Society">
+      <img src="<?php echo get_template_directory_uri(); ?>/assets/img/Microbiology-Logo.png" alt="Microbiology Society">
     </a>
-	  	  <div class="hidden-xs">
+	  <div class="hidden-xs">
 			<form class="menu-search2" role="search"  method="get" action="<?php echo home_url( '/' ); ?>">
-          		<input class="form-control" type="search" placeholder="Search the collection" value="<?php echo get_search_query() ?>" name="s">
-        	</form>
+        <input class="form-control" type="search" placeholder="Search the collection" value="<?php echo get_search_query() ?>" name="s">
+      </form>
 		</div>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarHeader" aria-controls="navbarHeader" aria-expanded="false" aria-label="Toggle navigation">
       <span></span>

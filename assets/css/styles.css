@@ -186,12 +186,14 @@ body.admin-bar #navbarHeader.collapse.show {
 
 
 /* HEADER =================== */
-.navbar {
-  height: 70px;
+.siteHeader .navbar {
+  height: 125px;
+  padding-left: 40px;
+  padding-right: 40px;
 }
 
-.navbar-brand {
-  color: rgba(0,0,0,1);
+.siteHeader .navbar-brand {
+  /* margin-left: 30px; */
 }
 
 .navbar-toggler {
@@ -320,8 +322,8 @@ body.admin-bar #navbarHeader.collapse.show {
 
 .menu-search2 {
   position: absolute;
-  right: 50px;
-  top: 25px;
+  right: 80px;
+  top: 50px;
 }
 
 .menu-search2 .form-control {
