@@ -16,7 +16,7 @@
 			<?php $doi = '10.1001/jama.2016.9797'; ?>
 			<?php if ( get_field('article-doi') ) { $doi = get_field('article-doi'); } ?>
 				<span class="__dimensions_badge_embed__" data-doi="<?php echo $doi; ?>" data-style="small_rectangle"></span>
-		     	<div data-badge-type="1" data-doi="<?php echo $doi; ?>" class="altmetric-embed"></div>
+		     	<div data-badge-popover="right" data-badge-type="1" data-doi="<?php echo $doi; ?>" class="altmetric-embed"></div>
 		</div>
 	</div>
 </div>
