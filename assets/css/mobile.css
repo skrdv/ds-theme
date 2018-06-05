@@ -1,0 +1,25 @@
+
+
+@media (max-width: 1200px) {
+
+  .more-like .container {
+    flex-wrap: wrap;
+  }
+  .more-like .item {
+    width: 50%;
+  }
+  .more-like .item:nth-child(even) {
+    padding-right: 0;
+  }
+
+
+}
+
+@media (max-width: 768px) {
+
+  .more-like .item {
+    width: 100%;
+    padding-right: 0;
+  }
+
+}

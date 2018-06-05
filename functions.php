@@ -10,6 +10,7 @@ function ds_scripts() {
   wp_enqueue_style( 'ds-slick', get_template_directory_uri().'/assets/css/slick.css' );
 	wp_enqueue_style( 'ds-lens', get_template_directory_uri() . '/assets/css/lens.css' );
 	wp_enqueue_style( 'ds-style', get_template_directory_uri() . '/assets/css/styles.css' );
+	wp_enqueue_style( 'ds-mobile', get_template_directory_uri() . '/assets/css/mobile.css' );
 	wp_enqueue_style( 'ds-print', get_template_directory_uri() . '/assets/css/print.css' );
 	wp_enqueue_style( 'ds-debug', get_template_directory_uri() . '/assets/css/debug.css' );
 
