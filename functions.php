@@ -479,10 +479,12 @@ if($postType == 'post'):
 		add_flash_notice( __('<span class="notice notice-green notice-done">Uploaded successfully.</span>'), 'info', true );
 
 	}
-
+	
+	delete_article_zip( $post_id );
+	
 endif;
 
-	delete_article_zip( $post_id );
+	
 }
 add_action('acf/save_post', 'my_acf_save_post', 20);
 

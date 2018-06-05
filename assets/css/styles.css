@@ -878,6 +878,7 @@ main {
   line-height: 32px;
 }
 
+
 .journals .item-text {
   color: #000000;
   font-size: 14px;
@@ -951,6 +952,9 @@ main {
 }
 
 
+.cardJournal-title span {
+  font-weight: 300;
+}
 
 .cardJournal-excerpt {
   margin-bottom: 15px;

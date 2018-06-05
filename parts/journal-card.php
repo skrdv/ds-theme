@@ -12,12 +12,12 @@
     </div>
 		<?php endif; ?>
 		<div class="cardJournal-link">
-      <a class="btn btn-<?php the_field('journal-color') ?>" href="<?php the_permalink(); ?>">Go to journal</a>
+      <a class="btn btn-<?php the_field('journal-color') ?>" href="<?php the_field('journal-link'); ?>">Go to journal</a>
     </div>
 
 	</div>
 </div>
-<a class="cardJournal visible-xs" href="<?php the_permalink(); ?>">
+<a class="cardJournal visible-xs" href="<?php the_field('journal-link'); ?>">
 	<div class="cardJournal-body">
 		<h3 class="cardJournal-title is-<?php the_field('journal-color') ?>">
 			<?php the_title(); ?>
