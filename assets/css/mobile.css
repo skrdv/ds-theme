@@ -15,11 +15,22 @@
 
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
 
   .more-like .item {
     width: 100%;
     padding-right: 0;
+  }
+
+  .journals-list .item,
+  .journals-list .item:nth-child(odd),
+  .journals-list .item:nth-child(even) {
+    width: 100%;
+    padding: 0;
+  }
+
+  .cardJournal-link {
+    display: none;
   }
 
 }
