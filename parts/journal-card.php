@@ -10,10 +10,11 @@
 		<div class="cardJournal-image">
       <?php the_post_thumbnail(array(540, 320)); ?>
     </div>
+		<?php endif; ?>
 		<div class="cardJournal-link">
       <a class="btn btn-<?php the_field('journal-color') ?>" href="<?php the_permalink(); ?>">Go to journal</a>
     </div>
-		<?php endif; ?>
+
 	</div>
 </div>
 <a class="cardJournal visible-xs" href="<?php the_permalink(); ?>">
