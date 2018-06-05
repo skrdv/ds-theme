@@ -103,14 +103,54 @@ body.admin-bar #navbarHeader.collapse.show {
 
 /* Buttons =================== */
 .btn {
+  position: relative;
   height: 36px;
   padding: .375rem 2rem;
   border: none;
   border-radius: 2px;
+  overflow: hidden;
+  border-width: 0;
+  outline: none;
+  border-radius: 2px;
+  box-shadow: 0 2px 2px rgba(0, 0, 0, .24);
+  transition: all .3s ease-out;
+  color: #fff;
   font-size: 14px;
   font-weight: 500;
   line-height: 28px;
   text-transform: uppercase;
+}
+
+.btn:hover, .btn:focus {
+  color: #fff;
+  box-shadow: 0 4px 4px 0 rgba(0,0,0,0.24);
+}
+
+.btn > * {
+  position: relative;
+}
+
+.btn:before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: block;
+  width: 0;
+  padding-top: 0;
+  border-radius: 100%;
+  background-color: rgba(236, 240, 241, .3);
+  -webkit-transform: translate(-50%, -50%);
+  -moz-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  -o-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+
+.btn:active:before {
+  width: 120%;
+  padding-top: 120%;
+  transition: width .2s ease-out, padding-top .2s ease-out;
 }
 
 .btn-primary {
