@@ -417,7 +417,8 @@ if($postType == 'post'):
         $articleAcceptedDateD = $xmlFile->front->{'article-meta'}->{'history'}->{'date'}[1]->{'day'};
         $articleAcceptedDateY = $xmlFile->front->{'article-meta'}->{'history'}->{'date'}[1]->{'year'};
         $articleAcceptedDateFull = $articleAcceptedDateD.'.'.$articleAcceptedDateM.'.'.$articleAcceptedDateY;
-        $articleDate = $articlePubDateFull;
+				$articleDateFormat = date("D, d M Y", strtotime($articlePubDateFull));
+        $articleDate = $articleDateFormat;
       // }
 
       function getContent(&$NodeContent="", $nod) {    $NodList=$nod->childNodes;
@@ -479,12 +480,12 @@ if($postType == 'post'):
 		add_flash_notice( __('<span class="notice notice-green notice-done">Uploaded successfully.</span>'), 'info', true );
 
 	}
-	
+
 	delete_article_zip( $post_id );
-	
+
 endif;
 
-	
+
 }
 add_action('acf/save_post', 'my_acf_save_post', 20);
 
