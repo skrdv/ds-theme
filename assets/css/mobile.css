@@ -17,6 +17,22 @@
 
 @media (max-width: 767px) {
 
+  html {
+    margin-top: 0 !important;
+  }
+
+  #wpadminbar.mobile {
+    display: none !important;
+  }
+
+  .siteHeader .navbar {
+    height: 70px;
+  }
+
+  .siteHeader .navbar-brand img {
+    width: 160px;
+  }
+
   .more-like .item {
     width: 100%;
     padding-right: 0;
@@ -33,6 +49,8 @@
     display: none;
   }
 
+
+
 }
 
 @media (max-width: 360px) {
@@ -41,12 +59,6 @@
     padding-left: 15px;
     padding-right: 15px;
   }
-  .siteHeader .navbar-brand img {
-    width: 180px;
-  }
-
-  #wpadminbar {
-    display: none;
-  }
+  
 
 }
