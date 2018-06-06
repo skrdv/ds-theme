@@ -34,3 +34,19 @@
   }
 
 }
+
+@media (max-width: 360px) {
+
+  .siteHeader .navbar {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+  .siteHeader .navbar-brand img {
+    width: 180px;
+  }
+
+  #wpadminbar {
+    display: none;
+  }
+
+}
