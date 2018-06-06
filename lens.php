@@ -139,8 +139,15 @@ if (isset($wp_query->query_vars['article'])) {
 
 				}
 
+				function updateDOILink(){
+
+					$('#main').find('.doi > a').attr('target','_blank');
+
+				}
+
 				setTimeout(addPdfBtn, 3000);
 				setTimeout(addToolsTab, 3000);
+				setTimeout(updateDOILink, 3000);
 
 			});
 		})(jQuery);
