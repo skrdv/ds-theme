@@ -159,6 +159,10 @@ body.admin-bar #navbarHeader.collapse.show {
   box-shadow: 0 2px 2px 0 rgba(0,0,0,0.24);
 }
 
+.btn-primary:hover {
+  background-color: #006A83;
+}
+
 .btn-blue {
   color: #FFFFFF;
   background-color: #7FCEF2;
@@ -717,7 +721,6 @@ main {
   color: rgba(117,117,117,1);
   font-size: 1.2rem;
   line-height: 2rem;
-  text-transform: uppercase;
 }
 
 .cardArticle-title {
@@ -1561,7 +1564,7 @@ padding: 20px 10px;
   bottom: auto;
   height: 36px;
   line-height: 30px;
-  padding-left: 15px;
+  padding-left: 30px;
   background-color: #EEEEEE;
   text-align: left;
 }
