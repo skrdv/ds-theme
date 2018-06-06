@@ -14,7 +14,7 @@
 		</div>
 	</div>
 	<div class="cardArticle-buttons">
-		<button type="button" class="btn btn-transparent" data-dismiss="modal">Close</button>
+		<button type="button" class="btn btn-text btn-transparent" data-dismiss="modal">Close</button>
 		<a class="btn btn-primary" href="<?php the_permalink(); ?>">Open</a>
 	</div>
 </div>

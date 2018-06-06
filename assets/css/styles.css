@@ -193,6 +193,12 @@ body.admin-bar #navbarHeader.collapse.show {
   box-shadow: none;
 }
 
+.btn-text:hover,
+.btn-text:focus {
+  color: #006A83;
+  background-color: #dedede;
+  box-shadow: none;
+}
 
 .is-blue {
   color: #7FCEF2 !important;
