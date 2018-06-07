@@ -17,13 +17,13 @@
 
 @media (max-width: 767px) {
 
-  html {
+  /* html {
     margin-top: 0 !important;
   }
 
   #wpadminbar {
     display: none !important;
-  }
+  } */
 
   .siteHeader .navbar {
     height: 70px;
@@ -57,7 +57,11 @@
     margin-bottom: 0;
   }
 
-
+  .single-post .siteHeader,
+  .single-post .siteFooter,
+  .single-post .more-like {
+    display: none !important;
+  }
 
 }
 

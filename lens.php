@@ -103,6 +103,15 @@ if (isset($wp_query->query_vars['article'])) {
 		margin-top: 0;
 		padding-top: 0;
 	}
+	#container {
+		min-width: 100%;
+	}
+	#homebtn {
+		display: inline-block;
+		margin-left: 30px;
+		margin-top: 15px;
+    z-index: 999;
+	}
 	</style>
 	<script type="text/javascript">
 		(function($) {
@@ -113,6 +122,12 @@ if (isset($wp_query->query_vars['article'])) {
 					var pdfurl = '<?php echo $articleUrl.'/'.get_field('article-pdf', $postID); ?>';
 					var pdfsize = '<?php echo FileSizeConvert(filesize($articlePath.'/'.get_field('article-pdf', $postID))); ?>';
 					$(doi).after('<a class="btn btn-primary" id="pdfbtn" target="_blank" href="'+pdfurl+'"> PDF '+pdfsize+'</a>');
+				}
+
+				function addHomeBtn(){
+					var main = $('#main');
+					var top = $('.article .document .surface.content .nodes');
+					$(top).prepend('<a class="btn btn-primary visible-xs" id="homebtn" href="/"> Back to home</a>');
 				}
 
 				function addToolsTab(){
@@ -146,6 +161,7 @@ if (isset($wp_query->query_vars['article'])) {
 				}
 
 				setTimeout(addPdfBtn, 3000);
+				setTimeout(addHomeBtn, 3000);
 				setTimeout(addToolsTab, 3000);
 				setTimeout(updateDOILink, 3000);
 

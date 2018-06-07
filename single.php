@@ -24,7 +24,7 @@ if (isset($wp_query->query_vars['template'])) {
     <div class="article-content hidden"></div>
 
     <div class="lens" id="lens">
-      <iframe src="<?php the_permalink(); ?>/?article=<?php echo get_the_ID(); ?>&template=lens" width="900" height="1400"></iframe>
+      <iframe src="<?php the_permalink(); ?>/?article=<?php echo get_the_ID(); ?>&template=lens" height="1400"></iframe>
     </div>
 
   </main>
