@@ -106,12 +106,16 @@ if (isset($wp_query->query_vars['article'])) {
 	#container {
 		min-width: 100%;
 	}
-	#homebtn {
-		display: inline-block;
-		margin-left: 30px;
-		margin-top: 15px;
-    z-index: 999;
+
+	@media (max-width: 767px) {
+		#homebtn {
+			display: inline-block;
+			margin-left: 30px;
+			margin-top: 15px;
+	    z-index: 999;
+		}
 	}
+
 	</style>
 	<script type="text/javascript">
 		(function($) {

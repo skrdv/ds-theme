@@ -17,14 +17,6 @@
 
 @media (max-width: 767px) {
 
-  /* html {
-    margin-top: 0 !important;
-  }
-
-  #wpadminbar {
-    display: none !important;
-  } */
-
   .siteHeader .navbar {
     height: 70px;
   }
