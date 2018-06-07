@@ -8,11 +8,11 @@
 </head>
 <body <?php body_class(); ?>>
 
-<div class="adminHeader">
+<div id="admin-head" class="adminHeader">
 	<div class="adminHeader-bottombar" ><a href="/cog9-admin">Digital Science</a></div>
 </div>	
 	
-	<div class="adminContent">
+	<div id="admin-content" class="adminContent">
 			<?php while (have_posts()): the_post(); ?>
 				<h1><?php the_title(); ?></h1>	
 					<?php do_action('admin_notices'); ?>

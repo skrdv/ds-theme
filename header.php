@@ -14,7 +14,6 @@
 	<meta name="apple-mobile-web-app-title" content="<?php bloginfo( 'name' ); ?> - <?php bloginfo( 'description' ); ?>">
 	<link rel="profile" href="http://gmpg.org/xfn/11">
 	<link rel="pingback" href="<?php bloginfo( 'pingback_url' ); ?>">
-  <title><?php the_title(); ?></title>
 	<?php wp_head(); ?>
 </head>
 <body <?php body_class(); ?>>
