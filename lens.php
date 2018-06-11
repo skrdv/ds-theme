@@ -132,6 +132,12 @@ if (isset($wp_query->query_vars['article'])) {
 					var main = $('#main');
 					var top = $('.article .document .surface.content .nodes');
 					$(top).prepend('<a class="btn btn-primary visible-xs" id="homebtn" href="/"> Back to home</a>');
+					$('#homebtn').on('click', function(e){
+						e.preventDefault();
+						var url = $(this).attr('href');
+						console.log(url);
+						document.location.href=url;
+					});
 				}
 
 				function addToolsTab(){
@@ -165,7 +171,7 @@ if (isset($wp_query->query_vars['article'])) {
 				}
 
 				setTimeout(addPdfBtn, 3000);
-				setTimeout(addHomeBtn, 3000);
+				// setTimeout(addHomeBtn, 3000);
 				setTimeout(addToolsTab, 3000);
 				setTimeout(updateDOILink, 3000);
 

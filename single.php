@@ -24,6 +24,7 @@ if (isset($wp_query->query_vars['template'])) {
     <div class="article-content hidden"></div>
 
     <div class="lens" id="lens">
+			<a class="btn btn-primary visible-xs" id="homebtn" href="/">Back to home</a>
       <iframe src="<?php the_permalink(); ?>/?article=<?php echo get_the_ID(); ?>&template=lens" height="1400"></iframe>
     </div>
 
