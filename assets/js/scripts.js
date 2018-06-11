@@ -33,14 +33,29 @@ function menuHomeTabs() {
 
 function slickSlider() {
 
-  $('.slickSlider').slick({
-    infinite: false,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    dots: true,
-    speed: 300,
-    variableWidth: true,
-  });
+  var ww = $(window).width();
+  if($(window).width() < 767) {
+    console.log('Mobile');
+    $('.slickSlider').slick({
+      infinite: false,
+      slidesToShow: 1,
+      slidesToScroll: 1,
+      dots: true,
+      speed: 300,
+      variableWidth: false,
+    });
+  } else {
+    console.log('Desktop');
+    $('.slickSlider').slick({
+      infinite: false,
+      slidesToShow: 1,
+      slidesToScroll: 1,
+      dots: true,
+      speed: 300,
+      variableWidth: true,
+    });
+  }
+
 
   $('a[data-slide]').click(function(e) {
     var slideno = jQuery(this).data('slide');
