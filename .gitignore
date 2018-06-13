@@ -1,4 +1,5 @@
 .git
 .ftpconfig
+.ftpconfig.bak
 *.log
 .README.md

@@ -93,6 +93,8 @@ $('.slider-for').slick({
 
 	<div class="debug">
 
+    <?php phpinfo(); ?>
+
 		<?php
 
     echo '<br><br><br><br><strong>===================</strong><br>';
