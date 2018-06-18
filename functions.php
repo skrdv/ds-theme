@@ -162,17 +162,27 @@ add_action( 'admin_notices', 'display_flash_notices', 12 );
 // add_flash_notice( __(''), 'error', false );
 
 
-// Prevent file duplicates on upload
-// add_action('add_attachment', function ($attachmentId) {
-//     $attachment = get_post($attachmentId);
-//     $path = get_attached_file($attachmentId);
-//
-//     $filename = sanitize_file_name($filename);
-//     $filename = pathinfo($filename, PATHINFO_FILENAME) . '_' . mt_rand() . (pathinfo($filename, PATHINFO_EXTENSION) ? '.' . pathinfo($filename, PATHINFO_EXTENSION) : '');
-//
-//     // в $path у Вас полный путь к файлу, а в $attachment - объект WP_Post вашего аттачмента
-//     // ... здесь Ваша логика для того, чтоб переименовать файл.
-// });
+
+// Parse array
+function getContent(&$NodeContent="", $nod) {
+		$NodList=$nod->childNodes;
+		for( $j=0 ;  $j < $NodList->length; $j++ )
+		{       $nod2=$NodList->item($j);//Node j
+				$nodemane=$nod2->nodeName;
+				$nodevalue=$nod2->nodeValue;
+				if($nod2->nodeType == XML_TEXT_NODE)
+						$NodeContent .=  $nodevalue;
+				else
+				{     $NodeContent .= "<$nodemane ";
+					 $attAre=$nod2->attributes;
+					 foreach ($attAre as $value)
+							$NodeContent .="{$value->nodeName}='{$value->nodeValue}'" ;
+						$NodeContent .=">";
+						getContent($NodeContent,$nod2);
+						$NodeContent .= "</$nodemane>";
+				}
+		}
+}
 
 
 
@@ -184,11 +194,12 @@ if($postType == 'post'):
 
 	// Get folders
   WP_Filesystem();
+	$siteUrl 		 = get_site_url();
   $rootPath		 = get_home_path();
   $uploadPath  = wp_upload_dir()['path'];
   $articleSlug = $post_id;
   $articlePath = $rootPath.'digital-science/'.$articleSlug;
-  $articleUrl = 'http://ds.skrdv.com/digital-science/'.$articleSlug;
+  $articleUrl  = $siteUrl.'/digital-science/'.$articleSlug;
 
 	// Get fields
 	$articleZip      = get_field('article-zip', $post_id);
@@ -235,7 +246,7 @@ if($postType == 'post'):
 			add_flash_notice( 'The archive structure is incorrect. Article is not created.', 'warning', true );
 			delete_article_zip($post_id);
 			wp_delete_post($post_id);
-			add_flash_notice( __('<span class="notice notice-red notice-done">Upload failed.</span>'), 'error', true );
+			add_flash_notice( __('<span class="notice notice-red notice-done">Upload failed.</span>'), 'error', false );
 		  return;
 		}
 
@@ -250,32 +261,32 @@ if($postType == 'post'):
 		$articleUnzip = unzip_file( $uploadPath.'/'.$articleFile, $articlePath);
     update_attached_file($articleZip, $articleUnzip);
     chmod_recursive($articlePath, true);
+    chmod_recursive($uploadPath, true);
 
     // Check unzip archive
     if ($articleUnzip) {
       add_flash_notice( __('<span class="notice notice-green">Unzip successful.</span> <br>'.$uploadPath.'/'.$articleFile), 'info', true );
     } else {
-      add_flash_notice( __('<span class="notice notice-red">Unzip error!</span>'), 'error', true );
+      add_flash_notice( __('<span class="notice notice-red">Unzip error!</span>'), 'error', false );
     }
 
 		// Delete zip archive
-		// chmod_recursive($uploadPath, true);
-		// unlink($uploadPath.'/'.$articleZipname['filename'].'.zip');
+		chmod_recursive($uploadPath, true);
+		unlink($uploadPath.'/'.$articleFile);
 
 		// Check for xml file after unzip
 		if (glob($articlePath.'/*.xml')) {
-			// add_flash_notice( glob($articlePath.'/*.xml')[0], 'error', true );
+			// add_flash_notice( glob($articlePath.'/*.xml')[0], 'error', false );
 		} else {
 			add_flash_notice( '<span class="notice notice-red">The archive structure is incorrect. Article is not created.</span>', 'warning', true );
 			delete_article_zip($post_id);
 			wp_delete_post($post_id);
-			add_flash_notice( __('<span class="notice notice-red notice-done">Upload failed.</span>'), 'error', true );
+			add_flash_notice( __('<span class="notice notice-red notice-done">Upload failed.</span>'), 'error', false );
 		  return;
 		}
 
     // Check PDF file
     $articlePdf = $articleName.'.pdf';
-    // add_flash_notice( __('PDF file: '.$articleUrl.'/'.$articlePdf), 'info', true );
 
     // Check for existing xml file
     $articlePdfArchivePath = $articlePath.'/'.$articleName.'.pdf';
@@ -285,7 +296,7 @@ if($postType == 'post'):
     if ($articlePdfArchivePath === $articlePdfFile) {
      add_flash_notice( __('<span class="notice notice-green">PDF file found.</span> <br> '.$articlePdfUrl), 'info', true );
     } else {
-     add_flash_notice( __('<span class="notice notice-red">PDF file is missing.</span>'), 'error', true );
+     add_flash_notice( __('<span class="notice notice-red">PDF file is missing.</span>'), 'error', false );
     }
 
     // Check XML file
@@ -296,7 +307,7 @@ if($postType == 'post'):
     $dom->load($articleXmlPath);
     // $dom->load($articleXmlUrl);
     // if (!$dom->load($articleXmlUrl)){
-    //  add_flash_notice( __('Error in XML document.'), 'error', true );
+    //  add_flash_notice( __('Error in XML document.'), 'error', false );
     // }
 
     $images = $dom->documentElement->getElementsByTagName('graphic');
@@ -312,7 +323,6 @@ if($postType == 'post'):
     $dom->save($articlePath.'/'.$articleName.'PNG.xml');
     chmod_recursive($articlePath, true);
     $articleXml = $articleName.'PNG.xml';
-    // add_flash_notice( __('XML file: '.$articleXmlPngUrl), 'info', true );
 
     // Check for existing xml file
     $articleXmlArchivePath = $articlePath.'/'.$articleName.'.xml';
@@ -321,44 +331,45 @@ if($postType == 'post'):
     if ($articleXmlArchivePath === $articleXmlFile) {
       add_flash_notice( __('<span class="notice notice-green">XML file found.</span> <br>'.$articleXmlPngUrl), 'info', true );
     } else {
-      add_flash_notice( __('<span class="notice notice-red">The archive structure is incorrect. Article is not created.</span>'), 'error', true );
+      add_flash_notice( __('<span class="notice notice-red">The archive structure is incorrect. Article is not created.</span>'), 'error', false );
 			return;
     }
 
 		// Check ImageMagick
-    // if (extension_loaded('imagick')) {
-    //   add_flash_notice( __('ImageMagick Loaded.'), 'info', true );
-    // } else {
-    //   add_flash_notice( __('Extension ImageMagick not found by extension_loaded.'), 'error', true );
-    // }
-
-    // Convert images to png
-    $imagesTif = glob($articlePath.'/*.tif');
-    if ($imagesTif) {
-      $imagesArrayFiles = array();
-      foreach($imagesTif as $image) {
-        $imageName = str_replace($articlePath.'/', '', substr($image, 0, -4));
-        array_push($imagesArrayFiles, $imageName);
-        $im = new imagick($image);
-        $im->writeImage($articlePath.'/'.$imageName.'.png');
-      }
+    if (extension_loaded('imagick')) {
+      add_flash_notice( __('ImageMagick Loaded.'), 'info', true );
+			// Convert images to png
+	    $imagesTif = glob($articlePath.'/*.tif');
+	    if ($imagesTif) {
+	      $imagesArrayFiles = array();
+	      foreach($imagesTif as $image) {
+	        $imageName = str_replace($articlePath.'/', '', substr($image, 0, -4));
+	        array_push($imagesArrayFiles, $imageName);
+	        $im = new imagick($image);
+	        $im->writeImage($articlePath.'/'.$imageName.'.png');
+	      }
+	    } else {
+				$imagesArrayFiles = '';
+				add_flash_notice( __('<span class="notice notice-green">No images in archive.</span>'), 'info', false );
+			}
+    } else {
+      add_flash_notice( __('<span class="notice notice-red notice-done">Extension ImageMagick not found by extension_loaded.</span>'), 'error', false );
+			return;
     }
 
 		// Check images for exists
 		if ($imagesArrayXml === $imagesArrayFiles) {
 		  add_flash_notice( __('<span class="notice notice-green">All images in archive exists.</span>'), 'info', true );
 		} elseif(!$imagesArrayXml) {
-		  add_flash_notice( __('<span class="notice notice-red">No images in the archive.</span>'), 'error', true );
+		  add_flash_notice( __('<span class="notice notice-red">No images in the archive.</span>'), 'error', false );
 		} else {
-		  add_flash_notice( __('<span class="notice notice-red">Some images are missing in the archive.</span>'), 'error', true );
+		  add_flash_notice( __('<span class="notice notice-red">Some images are missing in the archive.</span>'), 'error', false );
 		}
 
   	// Parse XML
     if ($articleXml) {
 
     	$xmlFile = simplexml_load_file($articleXmlPngUrl);
-    	// $xmlFile = simplexml_load_file($articleXmlPngPath);
-      // $xmlFile = simplexml_load_file($articlePath.'/'.$articleXml);
 
       // Get Journal Meta
       $journalTitle = $xmlFile->front->{'journal-meta'}->{'journal-title-group'}->{'journal-title'};
@@ -373,11 +384,8 @@ if($postType == 'post'):
       // Update Title
       if (!$articleTitle) {
         $articleTitle = $post_id;
-        // $postUpdate = array( 'ID' => $post_id, 'post_title' => $articleTitle );
-        // add_flash_notice( __('Article Title updated.'), 'info', true );
       } else {
         $articleTitle = $articleTitleFull;
-        // add_flash_notice( __('Article Title no changed.'), 'info', true );
       }
 
       // Get Article Meta
@@ -400,55 +408,38 @@ if($postType == 'post'):
         }
         $articleAuthorsList = implode(', ', $articleAuthorsArray);
         $articleAuthors = $articleAuthorsList;
-        // add_flash_notice( __('Article Authors updated.'), 'info', true );
-      } else {
-        // add_flash_notice( __('Article Authors not updated.'), 'error', true );
       }
 
       // Get Article Dates
-      // if ($articleDate) {
-        $articlePubDateD = $xmlFile->front->{'article-meta'}->{'pub-date'}->{'day'};
-        $articlePubDateM = $xmlFile->front->{'article-meta'}->{'pub-date'}->{'month'};
-        $articlePubDateY = $xmlFile->front->{'article-meta'}->{'pub-date'}->{'year'};
-        $articlePubDateFull = $articlePubDateD.'.'.$articlePubDateM.'.'.$articlePubDateY;
-        $articleReceivedDateM = $xmlFile->front->{'article-meta'}->{'history'}->{'date'}[0]->{'month'};
-        $articleReceivedDateD = $xmlFile->front->{'article-meta'}->{'history'}->{'date'}[0]->{'day'};
-        $articleReceivedDateY = $xmlFile->front->{'article-meta'}->{'history'}->{'date'}[0]->{'year'};
-        $articleReceivedDateFull = $articleReceivedDateD.'.'.$articleReceivedDateM.'.'.$articleReceivedDateY;
-        $articleAcceptedDateM = $xmlFile->front->{'article-meta'}->{'history'}->{'date'}[1]->{'month'};
-        $articleAcceptedDateD = $xmlFile->front->{'article-meta'}->{'history'}->{'date'}[1]->{'day'};
-        $articleAcceptedDateY = $xmlFile->front->{'article-meta'}->{'history'}->{'date'}[1]->{'year'};
-        $articleAcceptedDateFull = $articleAcceptedDateD.'.'.$articleAcceptedDateM.'.'.$articleAcceptedDateY;
-				$articleDateFormat = date("D, d M Y", strtotime($articlePubDateFull));
-        $articleDate = $articleDateFormat;
-      // }
+			$articlePubDateD = $xmlFile->front->{'article-meta'}->{'pub-date'}->{'day'};
+			$articlePubDateM = $xmlFile->front->{'article-meta'}->{'pub-date'}->{'month'};
+			$articlePubDateY = $xmlFile->front->{'article-meta'}->{'pub-date'}->{'year'};
+			$articlePubDateFull = $articlePubDateD.'.'.$articlePubDateM.'.'.$articlePubDateY;
+			$articleReceivedDateM = $xmlFile->front->{'article-meta'}->{'history'}->{'date'}[0]->{'month'};
+			$articleReceivedDateD = $xmlFile->front->{'article-meta'}->{'history'}->{'date'}[0]->{'day'};
+			$articleReceivedDateY = $xmlFile->front->{'article-meta'}->{'history'}->{'date'}[0]->{'year'};
+			$articleReceivedDateFull = $articleReceivedDateD.'.'.$articleReceivedDateM.'.'.$articleReceivedDateY;
+			$articleAcceptedDateM = $xmlFile->front->{'article-meta'}->{'history'}->{'date'}[1]->{'month'};
+			$articleAcceptedDateD = $xmlFile->front->{'article-meta'}->{'history'}->{'date'}[1]->{'day'};
+			$articleAcceptedDateY = $xmlFile->front->{'article-meta'}->{'history'}->{'date'}[1]->{'year'};
+			$articleAcceptedDateFull = $articleAcceptedDateD.'.'.$articleAcceptedDateM.'.'.$articleAcceptedDateY;
+			$articleDateFormat = date("D, d M Y", strtotime($articlePubDateFull));
+			$articleDate = $articleDateFormat;
 
-      function getContent(&$NodeContent="", $nod) {    $NodList=$nod->childNodes;
-          for( $j=0 ;  $j < $NodList->length; $j++ )
-          {       $nod2=$NodList->item($j);//Node j
-              $nodemane=$nod2->nodeName;
-              $nodevalue=$nod2->nodeValue;
-              if($nod2->nodeType == XML_TEXT_NODE)
-                  $NodeContent .=  $nodevalue;
-              else
-              {     $NodeContent .= "<$nodemane ";
-                 $attAre=$nod2->attributes;
-                 foreach ($attAre as $value)
-                    $NodeContent .="{$value->nodeName}='{$value->nodeValue}'" ;
-                  $NodeContent .=">";
-                  getContent($NodeContent,$nod2);
-                  $NodeContent .= "</$nodemane>";
-              }
-          }
 
-      }
 
       // Get XML file
       $dom=new DOMDocument();
       $dom->load($articleXmlUrl);
       // if (!$dom->load($articleXmlUrl)){
-      //  add_flash_notice( __('<span class="notice notice-red">Error in XML document.</span>'), 'error', true );
+      //  add_flash_notice( __('<span class="notice notice-red">Error in XML document.</span>'), 'error', false );
       // }
+
+      // Get Article Title
+      $atitle = $dom->documentElement->getElementsByTagName('article-title');
+      $nodItem = $atitle->item(0);
+      $titleHtml = getContent($tContent, $nodItem);
+      $articleTitle = $tContent;
 
       // Get Article Abstarct
       $abstract = $dom->documentElement->getElementsByTagName('abstract');
