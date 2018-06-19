@@ -119,9 +119,6 @@ function chmod_recursive($start_dir, $debug = true) {
 
 
 
-
-
-
 // Add a flash notice to {prefix}options table until a full page refresh is done
 function add_flash_notice( $notice = "", $type = "warning", $dismissible = true ) {
   // Here we return the notices saved on our option, if there are not notices, then an empty array is returned
@@ -163,7 +160,7 @@ add_action( 'admin_notices', 'display_flash_notices', 12 );
 
 
 
-// Parse array
+// Parse XML array
 function getContent(&$NodeContent="", $nod) {
 		$NodList=$nod->childNodes;
 		for( $j=0 ;  $j < $NodList->length; $j++ )
@@ -184,6 +181,19 @@ function getContent(&$NodeContent="", $nod) {
 		}
 }
 
+// Change Node name
+function changeName($node, $name) {
+	$newnode = $node->ownerDocument->createElement($name);
+	foreach ($node->childNodes as $child){
+		$child = $node->ownerDocument->importNode($child, true);
+		$newnode->appendChild($child, true);
+	}
+	foreach ($node->attributes as $attrName => $attrNode) {
+		$newnode->setAttribute($attrName, $attrNode);
+	}
+	$newnode->ownerDocument->replaceChild($newnode, $node);
+	return $newnode;
+}
 
 
 // Update post
@@ -319,6 +329,13 @@ if($postType == 'post'):
       $image->setAttributeNS('http://www.w3.org/1999/xlink', 'href', $imagePngPath);
       array_push($imagesArrayXml, $imageName);
     }
+    // $italics = $dom->documentElement->getElementsByTagName('italic');
+    // $italicArrayXml = array();
+    // foreach ($italics as $italic) {
+    //   $italicNode = $italic->nodeValue;
+		// 	$italicEm = str_replace('italic', 'em', $italicNode);
+    //   array_push($italicArrayXml, $italicEm);
+    // }
     $dom->saveXML();
     $dom->save($articlePath.'/'.$articleName.'PNG.xml');
     chmod_recursive($articlePath, true);
@@ -395,7 +412,6 @@ if($postType == 'post'):
           $articleDoi = $value.'';
       }
 
-
       // Get Article Authors
       if (!$articleAuthors) {
         $articleAuthorsArray = array();
@@ -426,8 +442,6 @@ if($postType == 'post'):
 			$articleDateFormat = date("D, d M Y", strtotime($articlePubDateFull));
 			$articleDate = $articleDateFormat;
 
-
-
       // Get XML file
       $dom=new DOMDocument();
       $dom->load($articleXmlUrl);
@@ -440,22 +454,25 @@ if($postType == 'post'):
       $nodItem = $atitle->item(0);
       $titleHtml = getContent($tContent, $nodItem);
       $articleTitle = $tContent;
+      $articleTitle = str_replace('italic', 'em', $articleTitle);
 
       // Get Article Abstarct
       $abstract = $dom->documentElement->getElementsByTagName('abstract');
       $nodItem = $abstract->item(0);
       $abstractHtml = getContent($aContent, $nodItem);
       $articleAbstract = $aContent;
+			$articleAbstract = str_replace('italic', 'em', $articleAbstract);
+			$articleAbstract = str_replace('bold', 'strong', $articleAbstract);
 
       // Get Article Body
       $body = $dom->documentElement->getElementsByTagName('body');
       $bodyItem = $body->item(0);
       $contentHtml = getContent($bContent, $bodyItem);
       $articleBody = $bContent;
-
+			$articleBody = str_replace('italic', 'em', $articleBody);
+			$articleBody = str_replace('bold', 'strong', $articleBody);
 
     }
-
 
     wp_update_post(array(
       'ID' => $post_id,
@@ -478,11 +495,8 @@ if($postType == 'post'):
 
 endif;
 
-
 }
 add_action('acf/save_post', 'my_acf_save_post', 20);
-
-
 
 
 

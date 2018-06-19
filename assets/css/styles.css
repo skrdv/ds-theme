@@ -827,6 +827,7 @@ div#_altmetric_popover_el.altmetric-embed div#_altmetric_container.altmetric_con
   font-size: 24px;
   line-height: 30px;
   color: rgba(0,0,0,0.87);
+  font-style: normal;
 }
 
 .modal .cardArticle-persons {
@@ -839,6 +840,7 @@ div#_altmetric_popover_el.altmetric-embed div#_altmetric_container.altmetric_con
   font-size: 16px;
   line-height: 24px;
   color: rgba(0,0,0,0.87);
+  font-style: normal;
 }
 
 .modal .cardArticle-buttons {
